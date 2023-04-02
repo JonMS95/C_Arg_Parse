@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <!-- Directory structure -->
+    <!-- Nodes behind describe the whole directory structure of the current project. -->
+    <Directories>
+        <Dynamic_libraries/>
+        <API>
+            <Header_files/>
+            <Dynamic_libraries/>
+        </API>
+        <Dependency_files>
+            <Header_files/>
+        </Dependency_files>
+        <Tests>
+            <Dependency_files>
+                <Dynamic_libraries/>
+                <Header_files/>
+            </Dependency_files>
+            <Object_files/>
+            <Executable_files/>
+        </Tests>
+    </Directories>
+    
+    <!-- API files -->
+    <!-- Shows where the API files for the current project should be found. -->
+    <API>
+        <Header_files
+            HeaderPath="Source_files/GetOptions_api.h"
+        />
+        <Dynamic_libraries
+            SOPath="Dynamic_libraries/libGetOptions.so"
+        />
+    </API>
+    
+    <!-- Dependencies -->
+    <!-- Paths to dependencies from other projects. -->
+    <Dependencies>
+        <Header_files
+            HeaderPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Header_files/SeverityLog_api.h"
+        />
+    </Dependencies>
+    
+    <!-- Tests -->
+    <!-- Paths to dependency files for the testing executable. -->
+    <Tests>
+        <Dependency_files>
+            <Header_files
+                SeverityLogHeaderPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Header_files/SeverityLog_api.h"
+                GetOptionsHeaderPath="/home/jon/Desktop/scripts/C/C_Arg_Parse/API/Header_files/GetOptions_api.h"
+            />
+            <Dynamic_libraries
+                SeverityLogSOPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Dynamic_libraries/libSeverityLog.so"
+                GetOptionsSOPath="/home/jon/Desktop/scripts/C/C_Arg_Parse/API/Dynamic_libraries/libGetOptions.so"
+            />
+        </Dependency_files>
+    </Tests>
+</config>
