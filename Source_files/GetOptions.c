@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+static int option_number = 0;
+static char* short_options_string = NULL;
+static PRIV_OPT_DEFINITION* private_options = NULL;
+
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Checks if the data type specifier is valid or not.
 /// @param opt_var_type Option variable type.
@@ -46,14 +50,14 @@ int CheckOptArgRequirement(int arg_requirement)
 /// @param max Maximum value.
 /// @return GET_OPT_ERR_WRONG_BOUNDARIES if min > max, 0 otherwise.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckOptLowerOrEqual(int opt_var_type, void* min, void* max)
+int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
 {
     switch (opt_var_type)
     {
         case GET_OPT_TYPE_INT:
         {
-            int minimum = *((int*)min);
-            int maximum = *((int*)max);
+            int minimum = min.integer;
+            int maximum = max.integer;
 
             if(minimum > maximum)
             {
@@ -64,8 +68,8 @@ int CheckOptLowerOrEqual(int opt_var_type, void* min, void* max)
 
         case GET_OPT_TYPE_CHAR:
         {
-            char minimum = *((char*)min);
-            char maximum = *((char*)max);
+            char minimum = min.character;
+            char maximum = max.character;
 
             if(minimum > maximum)
             {
@@ -76,8 +80,8 @@ int CheckOptLowerOrEqual(int opt_var_type, void* min, void* max)
 
         case GET_OPT_TYPE_FLOAT:
         {
-            float minimum = *((float*)min);
-            float maximum = *((float*)max);
+            float minimum = min.floating;
+            float maximum = max.floating;
 
             if(minimum > maximum)
             {
@@ -88,8 +92,8 @@ int CheckOptLowerOrEqual(int opt_var_type, void* min, void* max)
 
         case GET_OPT_TYPE_DOUBLE:
         {
-            double minimum = *((double*)min);
-            double maximum = *((double*)max);
+            double minimum = min.doubling;
+            double maximum = max.doubling;
 
             if(minimum > maximum)
             {
@@ -113,8 +117,8 @@ int CheckOptLowerOrEqual(int opt_var_type, void* min, void* max)
 /// @return GET_OPT_ERR_WRONG_BOUNDARIES if min > max, 0 otherwise.
 ///////////////////////////////////////////////////////////////////////
 int CheckBoundaries(int opt_var_type    ,
-                    void* opt_min_value ,
-                    void* opt_max_value )
+                    OPT_DATA_TYPE opt_min_value ,
+                    OPT_DATA_TYPE opt_max_value )
 {
     int check_boundaries = CheckOptLowerOrEqual(opt_var_type, opt_min_value, opt_max_value);
 
@@ -134,10 +138,10 @@ int CheckBoundaries(int opt_var_type    ,
 /// @param opt_default_value Option default value.
 /// @return GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS if value is out of bounds, GET_OPT_SUCCESS otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckDefaultValue(  int opt_var_type        ,
-                        void* opt_min_value     ,
-                        void* opt_max_value     ,
-                        void* opt_default_value )
+int CheckDefaultValue(  int             opt_var_type        ,
+                        OPT_DATA_TYPE   opt_min_value     ,
+                        OPT_DATA_TYPE   opt_max_value     ,
+                        OPT_DATA_TYPE   opt_default_value )
 {
     int check_def_val_be_min = CheckOptLowerOrEqual(opt_var_type, opt_min_value, opt_default_value);
     int check_def_val_le_max = CheckOptLowerOrEqual(opt_var_type, opt_default_value, opt_max_value);
@@ -147,6 +151,59 @@ int CheckDefaultValue(  int opt_var_type        ,
     {
         return GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS;
     }
+
+    return GET_OPT_SUCCESS;
+}
+
+int FillPrivateOptStruct(   char            opt_char            ,
+                            char*           opt_long            ,
+                            char*           opt_detail          ,
+                            int             opt_var_type        ,
+                            int             opt_needs_arg       ,
+                            OPT_DATA_TYPE   opt_min_value       ,
+                            OPT_DATA_TYPE   opt_max_value       ,
+                            OPT_DATA_TYPE   opt_default_value   ,
+                            void*           opt_dest_var        )
+{
+    option_number++;
+
+    if(option_number == 0)
+    {
+        return GET_OPT_ERR_OPT_NUM_ZERO;
+    }
+
+    if(option_number == 1)
+    {
+        private_options = (PRIV_OPT_DEFINITION*)calloc(option_number, sizeof(PRIV_OPT_DEFINITION));
+    }
+    else
+    {
+        private_options = (PRIV_OPT_DEFINITION*)realloc(private_options, option_number * sizeof(PRIV_OPT_DEFINITION));
+    }
+
+    int option_index = option_number - 1;
+    
+    private_options[option_index].pub_opt.opt_char  = opt_char;
+    strcpy((char*)(private_options[option_index].pub_opt.opt_long), opt_long);
+
+    if(opt_detail != NULL)
+    {
+        strcpy((char*)(private_options[option_index].pub_opt.opt_detail), opt_detail);
+    }
+
+    private_options[option_index].pub_opt.opt_var_type      = opt_var_type      ;
+    private_options[option_index].pub_opt.opt_needs_arg     = opt_needs_arg     ;
+    private_options[option_index].pub_opt.opt_min_value     = opt_min_value     ;
+    private_options[option_index].pub_opt.opt_max_value     = opt_max_value     ;
+    private_options[option_index].pub_opt.opt_default_value = opt_default_value ;
+    private_options[option_index].pub_opt.opt_dest_var      = opt_dest_var      ;
+
+    private_options[option_index].struct_opt_long.name      = private_options[option_index].pub_opt.opt_long;
+    private_options[option_index].struct_opt_long.has_arg   = private_options[option_index].pub_opt.opt_needs_arg;
+    private_options[option_index].struct_opt_long.flag      = NULL;
+    private_options[option_index].struct_opt_long.val       = private_options[option_index].pub_opt.opt_char;
+
+    private_options[option_index].opt_has_value = false;
 
     return GET_OPT_SUCCESS;
 }
@@ -164,15 +221,15 @@ int CheckDefaultValue(  int opt_var_type        ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened.
 //////////////////////////////////////////////////////////////////////////////
-int GetOptionDefinition(char    opt_char            ,
-                        char*   opt_long            ,
-                        char*   opt_detail          ,
-                        int     opt_var_type        ,
-                        int     opt_needs_arg       ,
-                        void*   opt_min_value       ,
-                        void*   opt_max_value       ,
-                        void*   opt_default_value   ,
-                        void*   opt_dest_var        )
+int GetOptionDefinition(char            opt_char            ,
+                        char*           opt_long            ,
+                        char*           opt_detail          ,
+                        int             opt_var_type        ,
+                        int             opt_needs_arg       ,
+                        OPT_DATA_TYPE   opt_min_value       ,
+                        OPT_DATA_TYPE   opt_max_value       ,
+                        OPT_DATA_TYPE   opt_default_value   ,
+                        void*           opt_dest_var        )
 {
     // Check if option character exists.
     if(opt_char == '\0')
@@ -283,5 +340,65 @@ int GetOptionDefinition(char    opt_char            ,
         return GET_OPT_ERR_NULL_DEST_VAR;
     }
 
+    int fill_private_opt_struct =   FillPrivateOptStruct(   opt_char            ,
+                                                            opt_long            ,
+                                                            opt_detail          ,
+                                                            opt_var_type        ,
+                                                            opt_needs_arg       ,
+                                                            opt_min_value       ,
+                                                            opt_max_value       ,
+                                                            opt_default_value   ,
+                                                            opt_dest_var        );
+
+    if(fill_private_opt_struct < 0)
+    {
+        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_OPT_NUM_ZERO);
+        return fill_private_opt_struct;
+    }
+
     return GET_OPT_SUCCESS;
+}
+
+int GenerateShortOptStr(void)
+{
+    if(private_options == NULL)
+    {
+        return GET_OPT_ERR_NULL_PTR;
+    }
+
+    if(short_options_string == NULL)
+    {
+        return GET_OPT_ERR_NULL_PTR;
+    }
+
+    char aux_short_options[3 * option_number + 1];
+    memset(aux_short_options, 0, sizeof(aux_short_options));
+
+    for(int i = 0; i < option_number; i++)
+    {
+        aux_short_options[strlen(aux_short_options)] = private_options[i].pub_opt.opt_char;
+
+        switch (private_options[i].pub_opt.opt_needs_arg)
+        {
+            case GET_OPT_ARG_REQ_REQUIRED:
+            {
+                aux_short_options[strlen(aux_short_options)] = ':';
+            }
+            break;
+
+            case GET_OPT_ARG_REQ_OPTIONAL:
+            {
+                aux_short_options[strlen(aux_short_options)] = ':';
+                aux_short_options[strlen(aux_short_options)] = ':';
+            }
+            break; 
+
+            case GET_OPT_ARG_REQ_NO:
+            default:
+            break;
+        }
+    }
+
+    short_options_string = (char*)calloc(strlen(aux_short_options), sizeof(char));
+    strcpy(short_options_string, aux_short_options);
 }
