@@ -25,7 +25,7 @@ typedef enum
     GET_OPT_TYPE_DOUBLE = 3,
     GET_OPT_TYPE_MAX    = 3,
 
-}option_data_supported_types;
+} OPT_DATA_SUPPORTED_TYPES;
 
 typedef enum
 {
@@ -35,7 +35,7 @@ typedef enum
     GET_OPT_ARG_REQ_OPTIONAL    = 2,
     GET_OPT_ARG_REQ_MAX         = 2,
 
-}option_argument_requirement;
+} OPT_ARG_REQUIREMENT;
 
 /// @brief Public structure, meant to be filled by the user.
 typedef struct
@@ -50,7 +50,7 @@ typedef struct
     void*   opt_default_value;
     void*   opt_dest_var;
 
-} public_options;
+} PUB_OPT_DEFINITION;
 
 /**********************************/
 
