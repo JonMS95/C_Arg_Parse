@@ -240,33 +240,36 @@ int GetOptionDefinition(char    opt_char            ,
         return check_opt_arg_requirement;
     }
 
-    // Check if minimum and maximum values are consistent or not.
-    int check_opt_min_max = CheckBoundaries(opt_var_type, opt_min_value, opt_max_value);
-    
-    if(check_opt_min_max < 0)
+    if(opt_needs_arg != GET_OPT_ARG_REQ_NO)
     {
-        SeverityLog(SVRTY_LVL_ERR               ,
-                    GET_OPT_MSG_WRONG_BOUNDARIES,
-                    opt_char                    ,
-                    opt_long                    ,
-                    opt_detail                  );
-        return check_opt_min_max;
-    }
+        // Check if minimum and maximum values are consistent or not.
+        int check_opt_min_max = CheckBoundaries(opt_var_type, opt_min_value, opt_max_value);
+        
+        if(check_opt_min_max < 0)
+        {
+            SeverityLog(SVRTY_LVL_ERR               ,
+                        GET_OPT_MSG_WRONG_BOUNDARIES,
+                        opt_char                    ,
+                        opt_long                    ,
+                        opt_detail                  );
+            return check_opt_min_max;
+        }
 
-    // Check if default value is within boundaries or not.
-    int check_default_value = CheckDefaultValue(opt_var_type        ,
-                                                opt_min_value       ,
-                                                opt_max_value       ,
-                                                opt_default_value   );
+        // Check if default value is within boundaries or not.
+        int check_default_value = CheckDefaultValue(opt_var_type        ,
+                                                    opt_min_value       ,
+                                                    opt_max_value       ,
+                                                    opt_default_value   );
 
-    if(check_default_value < 0)
-    {
-        SeverityLog(SVRTY_LVL_ERR                       ,
-                    GET_OPT_MSG_DEF_VAL_OUT_OF_BOUNDS   ,
-                    opt_char                            ,
-                    opt_long                            ,
-                    opt_detail                          );
-        return check_default_value;
+        if(check_default_value < 0)
+        {
+            SeverityLog(SVRTY_LVL_ERR                       ,
+                        GET_OPT_MSG_DEF_VAL_OUT_OF_BOUNDS   ,
+                        opt_char                            ,
+                        opt_long                            ,
+                        opt_detail                          );
+            return check_default_value;
+        }
     }
 
     // Check whether if the pointer to the target output variable is null or not.
