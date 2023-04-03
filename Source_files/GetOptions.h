@@ -7,6 +7,7 @@
 
 #include "GetOptions_api.h"
 #include <stdbool.h>
+#include <getopt.h>
 
 /************************************/
 
@@ -26,6 +27,8 @@
 #define GET_OPT_ERR_WRONG_BOUNDARIES        -7
 #define GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS   -8
 #define GET_OPT_ERR_NULL_DEST_VAR           -9
+#define GET_OPT_ERR_OPT_NUM_ZERO            -10
+#define GET_OPT_ERR_NULL_PTR                -11
 
 /******** Messages ********/
 #define GET_OPT_MSG_NO_OPT_CHAR             "No option character provided.\r\n"
@@ -38,6 +41,8 @@
 #define GET_OPT_MSG_WRONG_BOUNDARIES        "Minimum > maximum for the current option: -%c --%s (%s).\r\n"
 #define GET_OPT_MSG_DEF_VAL_OUT_OF_BOUNDS   "Default value is out of boundaries for current option: -%c --%s (%s).\r\n"
 #define GET_OPT_MSG_NULL_DEST_VAR           "Current option destination value address is not set: -%c --%s (%s).\r\n"
+#define GET_OPT_MSG_OPT_NUM_ZERO            "Current option number is zero. Should not have reached this point.\r\n"
+#define GET_OPT_ERR_NULL_PTR                "NULL pointer found.\r\n"
 
 /***********************************/
 
@@ -45,12 +50,15 @@
 /******** Type definitions ********/
 /**********************************/
 
+typedef struct option PRIV_OPT_LONG;
+
 typedef struct 
 {
     PUB_OPT_DEFINITION  pub_opt         ;
+    PRIV_OPT_LONG       struct_opt_long ;
     bool                opt_has_value   ;
 
-} private_option_definition;
+} PRIV_OPT_DEFINITION;
 
 /**********************************/
 
