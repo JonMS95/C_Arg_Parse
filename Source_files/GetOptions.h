@@ -6,6 +6,7 @@
 /************************************/
 
 #include "GetOptions_api.h"
+#include <stdbool.h>
 
 /************************************/
 
@@ -43,6 +44,13 @@
 /**********************************/
 /******** Type definitions ********/
 /**********************************/
+
+typedef struct 
+{
+    PUB_OPT_DEFINITION  pub_opt         ;
+    bool                opt_has_value   ;
+
+} private_option_definition;
 
 /**********************************/
 
