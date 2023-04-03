@@ -272,11 +272,11 @@ int GetOptionDefinition(char    opt_char            ,
     // Check whether if the pointer to the target output variable is null or not.
     if(opt_dest_var == NULL)
     {
-        SeverityLog(SVRTY_LVL_ERR, 
-                    GET_OPT_MSG_NULL_DEST_VAR,
-                    opt_char                            ,
-                    opt_long                            ,
-                    opt_detail                          );
+        SeverityLog(SVRTY_LVL_ERR               , 
+                    GET_OPT_MSG_NULL_DEST_VAR   ,
+                    opt_char                    ,
+                    opt_long                    ,
+                    opt_detail                  );
         return GET_OPT_ERR_NULL_DEST_VAR;
     }
 

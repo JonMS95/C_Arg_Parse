@@ -105,23 +105,23 @@ int dummy = 1;
 
 GetOptionDefinition_Test_Data GetOptionDefinition_data =
 {
-    .opt_char = {'c', '\0'},
-    .opt_long = {
-                    "xxxxxxxxxx",
-                    NULL,
-                    "xxxxxxxxxxx",
-                },
-    .opt_det =  {
-                    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-                    NULL,
-                    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                },
-    .opt_var_type = {0, -1, 4},
-    .opt_needs_arg = {1, -1, 3},
-    .opt_min_value = {0, 2},
-    .opt_max_value = {2, 0},
-    .opt_default_value = {1, 3},
-    .opt_dest_var = {&dummy, NULL},
+    .opt_char =             {'c', '\0'},
+    .opt_long =             {
+                            "xxxxxxxxxx",
+                            NULL,
+                            "xxxxxxxxxxx",
+                            },
+    .opt_det =              {
+                                "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                                NULL,
+                                "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                            },
+    .opt_var_type =         {0, -1, 4},
+    .opt_needs_arg =        {1, -1, 3},
+    .opt_min_value =        {0, 2    },
+    .opt_max_value =        {2, 0    },
+    .opt_default_value =    {1, 3    },
+    .opt_dest_var =         {&dummy, NULL},
 
 };
 
@@ -156,15 +156,15 @@ int Test_GetOptionDefinition()
     for(int i = 0; i < sizeof(GetOptionDefinition_Test_Indexes) / sizeof(GetOptionDefinition_Test_Indexes[0]); i++)
     {
         SeverityLog(SVRTY_LVL_INF, "Test %d.\r\n", i);
-        int get_option_definition = GetOptionDefinition(GetOptionDefinition_data.opt_char[GetOptionDefinition_Test_Indexes[i][0]]           ,
-                                                        GetOptionDefinition_data.opt_long[GetOptionDefinition_Test_Indexes[i][1]]           ,
-                                                        GetOptionDefinition_data.opt_det[GetOptionDefinition_Test_Indexes[i][2]]            ,
-                                                        GetOptionDefinition_data.opt_var_type[GetOptionDefinition_Test_Indexes[i][3]]       ,
-                                                        GetOptionDefinition_data.opt_needs_arg[GetOptionDefinition_Test_Indexes[i][4]]      ,
-                                                        &GetOptionDefinition_data.opt_min_value[GetOptionDefinition_Test_Indexes[i][5]]     ,
-                                                        &GetOptionDefinition_data.opt_max_value[GetOptionDefinition_Test_Indexes[i][6]]     ,
+        int get_option_definition = GetOptionDefinition(GetOptionDefinition_data.opt_char[          GetOptionDefinition_Test_Indexes[i][0]] ,
+                                                        GetOptionDefinition_data.opt_long[          GetOptionDefinition_Test_Indexes[i][1]] ,
+                                                        GetOptionDefinition_data.opt_det[           GetOptionDefinition_Test_Indexes[i][2]] ,
+                                                        GetOptionDefinition_data.opt_var_type[      GetOptionDefinition_Test_Indexes[i][3]] ,
+                                                        GetOptionDefinition_data.opt_needs_arg[     GetOptionDefinition_Test_Indexes[i][4]] ,
+                                                        &GetOptionDefinition_data.opt_min_value[    GetOptionDefinition_Test_Indexes[i][5]] ,
+                                                        &GetOptionDefinition_data.opt_max_value[    GetOptionDefinition_Test_Indexes[i][6]] ,
                                                         &GetOptionDefinition_data.opt_default_value[GetOptionDefinition_Test_Indexes[i][7]] ,
-                                                        GetOptionDefinition_data.opt_dest_var[GetOptionDefinition_Test_Indexes[i][8]]       );
+                                                        GetOptionDefinition_data.opt_dest_var[      GetOptionDefinition_Test_Indexes[i][8]] );
 
         if(get_option_definition != GetOptionDefinition_Test_Indexes[i][9])
         {
