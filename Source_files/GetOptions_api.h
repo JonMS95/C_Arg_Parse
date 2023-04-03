@@ -37,18 +37,27 @@ typedef enum
 
 } OPT_ARG_REQUIREMENT;
 
+typedef union
+{
+    int     integer;
+    char    character;
+    float   floating;
+    double  doubling;
+
+} OPT_DATA_TYPE;
+
 /// @brief Public structure, meant to be filled by the user.
 typedef struct
 {
-    char    opt_char;
-    char*   opt_long[GET_OPT_SIZE_LONG_MAX];
-    char*   opt_detail[GET_OPT_SIZE_DETAIL_MAX];
-    int     opt_var_type;
-    int     opt_needs_arg;
-    void*   opt_min_value;
-    void*   opt_max_value;
-    void*   opt_default_value;
-    void*   opt_dest_var;
+    char            opt_char;
+    char*           opt_long[GET_OPT_SIZE_LONG_MAX];
+    char*           opt_detail[GET_OPT_SIZE_DETAIL_MAX];
+    int             opt_var_type;
+    int             opt_needs_arg;
+    OPT_DATA_TYPE   opt_min_value;
+    OPT_DATA_TYPE   opt_max_value;
+    OPT_DATA_TYPE   opt_default_value;
+    void*           opt_dest_var;
 
 } PUB_OPT_DEFINITION;
 
@@ -71,15 +80,15 @@ typedef struct
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened.
 //////////////////////////////////////////////////////////////////////////////
-int GetOptionDefinition(char    opt_char            ,
-                        char*   opt_long            ,
-                        char*   opt_detail          ,
-                        int     opt_var_type        ,
-                        int     opt_needs_arg       ,
-                        void*   opt_min_value       ,
-                        void*   opt_max_value       ,
-                        void*   opt_default_value   ,
-                        void*   opt_dest_var        );
+int GetOptionDefinition(char            opt_char            ,
+                        char*           opt_long            ,
+                        char*           opt_detail          ,
+                        int             opt_var_type        ,
+                        int             opt_needs_arg       ,
+                        OPT_DATA_TYPE   opt_min_value       ,
+                        OPT_DATA_TYPE   opt_max_value       ,
+                        OPT_DATA_TYPE   opt_default_value   ,
+                        void*           opt_dest_var        );
 
 /*************************************/
 
