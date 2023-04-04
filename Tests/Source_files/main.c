@@ -88,8 +88,8 @@ void ParseDemo(int argc, char** argv)
 
 typedef struct
 {
-    char            opt_char[2]        ;
-    char*           opt_long[3]       ;
+    char            opt_char[16]        ;
+    char*           opt_long[14]       ;
     char*           opt_det[3]        ;
     int             opt_var_type[3]     ;
     int             opt_needs_arg[4]    ;
@@ -104,11 +104,22 @@ int dummy = 1;
 
 GetOptionDefinition_Test_Data GetOptionDefinition_data =
 {
-    .opt_char =             {'c', '\0'},
+    .opt_char =             {'z', '\0', 'a','b','c','d','e','f','g','h','i','j','k','l','m','n'},
     .opt_long =             {
                             "xxxxxxxxxx",
                             NULL,
                             "xxxxxxxxxxx",
+                            "Option c",
+                            "Option e",
+                            "Option f",
+                            "Option g",
+                            "Option h",
+                            "Option i",
+                            "Option j",
+                            "Option k",
+                            "Option l",
+                            "Option m",
+                            "Option n",
                             },
     .opt_det =              {
                                 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
@@ -129,20 +140,21 @@ GetOptionDefinition_Test_Case GetOptionDefinition_Test_Indexes[]=
 {
 //  opt_char    opt_long    opt_det opt_var_type    opt_needs_arg   opt_min_value   opt_max_value   opt_default_value   opt_dest_var    Error code
     {0,         0,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_SUCCESS                     },
-    {0,         0,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_SUCCESS                     },
+    {0,         0,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_OPT_CHAR_ALREADY_EXISTS },
     {1,         0,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_NO_OPT_CHAR             },
-    {0,         1,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_NO_OPT_LONG             },
-    {0,         2,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_LONG_LENGTH_EXCEEDED    },
-    {0,         0,          1,      0,              0,              0,              0,              0,                  0,              GET_OPT_SUCCESS                     },
-    {0,         0,          2,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_DETAIL_LENGTH_EXCEEDED  },
-    {0,         0,          0,      1,              0,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_TYPE            },
-    {0,         0,          0,      2,              0,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_TYPE            },
-    {0,         0,          0,      0,              1,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_ARG_REQ         },
-    {0,         0,          0,      0,              2,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_ARG_REQ         },
-    {0,         0,          0,      0,              0,              1,              1,              0,                  0,              GET_OPT_ERR_WRONG_BOUNDARIES        },
-    {0,         0,          0,      0,              3,              1,              1,              0,                  0,              GET_OPT_SUCCESS                     },
-    {0,         0,          0,      0,              0,              0,              0,              1,                  0,              GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS   },
-    {0,         0,          0,      0,              0,              0,              0,              0,                  1,              GET_OPT_ERR_NULL_DEST_VAR           },
+    {2,         1,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_NO_OPT_LONG             },
+    {3,         2,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_LONG_LENGTH_EXCEEDED    },
+    {4,         3,          0,      0,              0,              0,              0,              0,                  0,              GET_OPT_SUCCESS                     },
+    {5,         0,          1,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_OPT_LONG_ALREADY_EXISTS },
+    {6,         4,          2,      0,              0,              0,              0,              0,                  0,              GET_OPT_ERR_DETAIL_LENGTH_EXCEEDED  },
+    {7,         5,          0,      1,              0,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_TYPE            },
+    {8,         6,          0,      2,              0,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_TYPE            },
+    {9,         7,          0,      0,              1,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_ARG_REQ         },
+    {10,        8,          0,      0,              2,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_ARG_REQ         },
+    {11,        9,          0,      0,              0,              1,              1,              0,                  0,              GET_OPT_ERR_WRONG_BOUNDARIES        },
+    {12,        10,         0,      0,              3,              1,              1,              0,                  0,              GET_OPT_SUCCESS                     },
+    {13,        11,         0,      0,              0,              0,              0,              1,                  0,              GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS   },
+    {14,        12,         0,      0,              0,              0,              0,              0,                  1,              GET_OPT_ERR_NULL_DEST_VAR           },
 
 };
 
