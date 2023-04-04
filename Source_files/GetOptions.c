@@ -568,7 +568,7 @@ static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 
     for(int i = GET_OPT_SIZE_VERB_BRIEF; i < GET_OPT_SIZE_VERB_BRIEF + option_number; i++)
     {
-        memcpy(&priv_opt_long[i], &private_options[i].struct_opt_long, sizeof(PRIV_OPT_LONG));
+        memcpy(&priv_opt_long[i], &private_options[i - GET_OPT_SIZE_VERB_BRIEF].struct_opt_long, sizeof(PRIV_OPT_LONG));
     }
     
     memset(&priv_opt_long[GET_OPT_SIZE_VERB_BRIEF + option_number], 0, sizeof(PRIV_OPT_LONG));
@@ -595,7 +595,7 @@ int ParseOptions(int argc, char** argv)
 
     PRIV_OPT_LONG priv_opt_long[GET_OPT_SIZE_VERB_BRIEF + option_number + 1];
 
-    int generate_opt_long = GenerateOptLong(&priv_opt_long);
+    int generate_opt_long = GenerateOptLong(priv_opt_long);
 
     if(generate_opt_long < 0)
     {
@@ -604,7 +604,57 @@ int ParseOptions(int argc, char** argv)
         return generate_opt_long;
     }
 
+    int option;
+    int option_index = 0;
+    while((option = getopt_long(argc, argv, short_options_string, priv_opt_long, &priv_opt_long)) != -1)
+    {
+        if(option == -1)
+        {
+            break;
+        }
 
+        switch (option)
+        {
+            // Option sets a flag.
+            case 0:
+            {
+                for(int i = 0; i < sizeof(priv_opt_long) / sizeof(priv_opt_long[0]); i++)
+                {
+                    if(strcmp(argv[optind], priv_opt_long[i].name == 0))
+                    {
+                        SeverityLog(SVRTY_LVL_DBG, "%s\r\n", priv_opt_long[i].name);
+                        SeverityLog(SVRTY_LVL_INF, "%s flag set to %d.\r\n", getName(priv_opt_long[i].flag), *(priv_opt_long[i].flag));
+                        break;
+                    }
+                }
+            }
+            break;
+
+            // Missing option argument.
+            case ':':
+            {
+                SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NO_ARG_FOUND, optopt);
+                FreeHeapOptData();
+                return GET_OPT_ERR_NO_ARG_FOUND;
+            }
+            break;
+
+            // Invalid option.
+            case '?':
+            {
+                SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_UNKNOWN_OPTION, optopt);
+                FreeHeapOptData();
+                return GET_OPT_ERR_UNKNOWN_OPTION;
+            }
+            break;
+
+            default:
+            {
+
+            }
+            break;
+        }
+    }
 
     return GET_OPT_SUCCESS;
 }
