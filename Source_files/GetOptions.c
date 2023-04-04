@@ -3,16 +3,65 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int option_number = 0;
-static char* short_options_string = NULL;
-static PRIV_OPT_DEFINITION* private_options = NULL;
+static int                  option_number           = 0;
+static char*                short_options_string    = NULL;
+static PRIV_OPT_DEFINITION* private_options         = NULL;
+static int                  verbose_flag            = 1;
+static PRIV_OPT_LONG        opt_long_verbose        = {"verbose"    , no_argument   ,   &verbose_flag,  1};
+static PRIV_OPT_LONG        opt_long_brief          = {"brief"      , no_argument   ,   &verbose_flag,  0};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Looks for every character in private option definitions. Checks if the given character already exists.
+/// @param current_opt_char Character that's meant to be checked. 
+/// @return GET_OPT_ERR_OPT_CHAR_ALREADY_EXISTS if the character already exists, 0 otherwise.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int CheckExistingOptionChar(char current_opt_char)
+{
+    for(int i = 0; i < option_number; i++)
+    {
+        if(private_options[i].pub_opt.opt_char == current_opt_char)
+        {
+            SeverityLog(SVRTY_LVL_WNG,
+                        GET_OPT_MSG_OPT_CHAR_ALREADY_EXISTS,
+                        private_options[i].pub_opt.opt_char,
+                        private_options[i].pub_opt.opt_long,
+                        private_options[i].pub_opt.opt_detail);
+            return GET_OPT_ERR_OPT_CHAR_ALREADY_EXISTS;
+        }
+    }
+
+    return GET_OPT_SUCCESS;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Looks for every character in private option definitions. Checks if the given lon option string already exists.
+/// @param current_opt_char Long option that's meant to be checked. 
+/// @return GET_OPT_ERR_OPT_LONG_ALREADY_EXISTS if the character already exists, 0 otherwise.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int CheckExistingOptionLong(char* current_opt_long)
+{
+    for(int i = 0; i < option_number; i++)
+    {
+        if(strcmp(private_options[i].pub_opt.opt_char, current_opt_long) != 0)
+        {
+            SeverityLog(SVRTY_LVL_WNG,
+                        GET_OPT_MSG_OPT_LONG_ALREADY_EXISTS,
+                        private_options[i].pub_opt.opt_char,
+                        private_options[i].pub_opt.opt_long,
+                        private_options[i].pub_opt.opt_detail);
+            return GET_OPT_ERR_OPT_LONG_ALREADY_EXISTS;
+        }
+    }
+
+    return GET_OPT_SUCCESS;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Checks if the data type specifier is valid or not.
 /// @param opt_var_type Option variable type.
 /// @return GET_OPT_ERR_UNKNOWN_TYPE if the data type is unknown, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-int CheckValidDataType(int opt_var_type)
+static int CheckValidDataType(int opt_var_type)
 {
     for(int i = GET_OPT_TYPE_MIN; i <= GET_OPT_TYPE_MAX; i++)
     {
@@ -30,7 +79,7 @@ int CheckValidDataType(int opt_var_type)
 /// @param arg_requirement Argument requirement level (GET_OPT_ARG_REQ_NO, GET_OPT_ARG_REQ_REQUIRED, GET_OPT_ARG_REQ_OPTIONAL).
 /// @return GET_OPT_ERR_UNKNOWN_ARG_REQ if the option argument requirement specifier is unknown, 0 otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckOptArgRequirement(int arg_requirement)
+static int CheckOptArgRequirement(int arg_requirement)
 {
     for(int i = GET_OPT_ARG_REQ_MIN; i <= GET_OPT_ARG_REQ_MAX; i++)
     {
@@ -50,7 +99,7 @@ int CheckOptArgRequirement(int arg_requirement)
 /// @param max Maximum value.
 /// @return GET_OPT_ERR_WRONG_BOUNDARIES if min > max, 0 otherwise.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
+static int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
 {
     switch (opt_var_type)
     {
@@ -116,7 +165,7 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
 /// @param opt_max_value Option maximum value.
 /// @return GET_OPT_ERR_WRONG_BOUNDARIES if min > max, 0 otherwise.
 ///////////////////////////////////////////////////////////////////////
-int CheckBoundaries(int opt_var_type    ,
+static int CheckBoundaries(int opt_var_type    ,
                     OPT_DATA_TYPE opt_min_value ,
                     OPT_DATA_TYPE opt_max_value )
 {
@@ -138,7 +187,7 @@ int CheckBoundaries(int opt_var_type    ,
 /// @param opt_default_value Option default value.
 /// @return GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS if value is out of bounds, GET_OPT_SUCCESS otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckDefaultValue(  int             opt_var_type        ,
+static int CheckDefaultValue(  int             opt_var_type        ,
                         OPT_DATA_TYPE   opt_min_value     ,
                         OPT_DATA_TYPE   opt_max_value     ,
                         OPT_DATA_TYPE   opt_default_value )
@@ -155,7 +204,20 @@ int CheckDefaultValue(  int             opt_var_type        ,
     return GET_OPT_SUCCESS;
 }
 
-int FillPrivateOptStruct(   char            opt_char            ,
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Generate private option struct (allocated in heap) once an option definition has been retrieved.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_var_type Option variable type.
+/// @param opt_needs_arg Specifies if the option needs arguments or not.
+/// @param opt_min_value Option minimum value.
+/// @param opt_max_value Option maximum value.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return GET_OPT_ERR_OPT_NUM_ZERO if there are no options defined, 0 otherwise..
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+static int FillPrivateOptStruct(   char            opt_char            ,
                             char*           opt_long            ,
                             char*           opt_detail          ,
                             int             opt_var_type        ,
@@ -219,7 +281,7 @@ int FillPrivateOptStruct(   char            opt_char            ,
 /// @param opt_max_value Option maximum value.
 /// @param opt_default_value Option default value.
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
-/// @return < 0 if any error happened.
+/// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
 int GetOptionDefinition(char            opt_char            ,
                         char*           opt_long            ,
@@ -238,6 +300,14 @@ int GetOptionDefinition(char            opt_char            ,
         return GET_OPT_ERR_NO_OPT_CHAR;
     }
 
+    // If the option character is valid, check whether it already exists.
+    int check_existing_option_char = CheckExistingOptionChar(opt_char);
+
+    if(check_existing_option_char < 0)
+    {
+        return check_existing_option_char;
+    }
+
     // Check if option long string exists.
     if(opt_long == NULL)
     {
@@ -253,6 +323,14 @@ int GetOptionDefinition(char            opt_char            ,
             SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_LONG_LENGTH_EXCEEDED);
             return GET_OPT_ERR_LONG_LENGTH_EXCEEDED;
         }
+    }
+
+    // If the option long string is valid, check whether it already exists.
+    int check_existing_option_long = CheckExistingOptionLong(opt_long);
+
+    if(check_existing_option_long < 0)
+    {
+        return check_existing_option_long;
     }
 
     // Check if option detail exists.
@@ -297,6 +375,7 @@ int GetOptionDefinition(char            opt_char            ,
         return check_opt_arg_requirement;
     }
 
+    // If the current option requires arguments, then:
     if(opt_needs_arg != GET_OPT_ARG_REQ_NO)
     {
         // Check if minimum and maximum values are consistent or not.
@@ -340,6 +419,7 @@ int GetOptionDefinition(char            opt_char            ,
         return GET_OPT_ERR_NULL_DEST_VAR;
     }
 
+    // Generate private option definition based on the values received by the current function.
     int fill_private_opt_struct =   FillPrivateOptStruct(   opt_char            ,
                                                             opt_long            ,
                                                             opt_detail          ,
@@ -359,14 +439,14 @@ int GetOptionDefinition(char            opt_char            ,
     return GET_OPT_SUCCESS;
 }
 
-int GenerateShortOptStr(void)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Generates short options string based on what's found in private_options.
+/// @return GET_OPT_ERR_NULL_PTR if pointers to private options or short_options_string are uninitialized.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+static int GenerateShortOptStr(void)
 {
-    if(private_options == NULL)
-    {
-        return GET_OPT_ERR_NULL_PTR;
-    }
-
-    if(short_options_string == NULL)
+    if( (private_options        == NULL ) ||
+        (short_options_string   == NULL ))
     {
         return GET_OPT_ERR_NULL_PTR;
     }
@@ -401,4 +481,47 @@ int GenerateShortOptStr(void)
 
     short_options_string = (char*)calloc(strlen(aux_short_options), sizeof(char));
     strcpy(short_options_string, aux_short_options);
+}
+
+static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
+{
+    if(priv_opt_long == NULL)
+    {
+        return GET_OPT_ERR_NULL_PTR;
+    }
+
+    memcpy(&priv_opt_long[0], &opt_long_verbose, sizeof(PRIV_OPT_LONG));
+    memcpy(&priv_opt_long[1], &opt_long_brief, sizeof(PRIV_OPT_LONG));
+
+    for(int i = GET_OPT_SIZE_VERB_BRIEF; i = GET_OPT_SIZE_VERB_BRIEF + option_number; i++)
+    {
+        memcpy(&priv_opt_long[i], &private_options[i].struct_opt_long, sizeof(PRIV_OPT_LONG));
+    }
+    
+    memset(&priv_opt_long[GET_OPT_SIZE_VERB_BRIEF + option_number], 0, sizeof(PRIV_OPT_LONG));
+
+    return GET_OPT_SUCCESS;
+}
+
+int ParseOptions(int argc, char** argv)
+{
+    int generate_short_options_string = GenerateShortOptStr();
+    
+    if(generate_short_options_string < 0)
+    {
+        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NULL_PTR);
+        return generate_short_options_string;
+    }
+
+    PRIV_OPT_LONG priv_opt_long[GET_OPT_SIZE_VERB_BRIEF + option_number + 1];
+
+    int generate_opt_long = GenerateOptLong(&priv_opt_long);
+
+    if(generate_opt_long < 0)
+    {
+        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NULL_PTR);
+        return generate_opt_long;
+    }
+
+    
 }
