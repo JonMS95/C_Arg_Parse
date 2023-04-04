@@ -42,7 +42,7 @@ int CheckExistingOptionLong(char* current_opt_long)
 {
     for(int i = 0; i < option_number; i++)
     {
-        if(strcmp(private_options[i].pub_opt.opt_char, current_opt_long) != 0)
+        if(strcmp(private_options[i].pub_opt.opt_long, current_opt_long) == 0)
         {
             SeverityLog(SVRTY_LVL_WNG,
                         GET_OPT_MSG_OPT_LONG_ALREADY_EXISTS,
@@ -483,6 +483,11 @@ static int GenerateShortOptStr(void)
     strcpy(short_options_string, aux_short_options);
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+/// @brief Generates the data needed by the long options parser.
+/// @param priv_opt_long Pointer to the struct array that's meant to be populated.
+/// @return GET_OPT_ERR_NULL_PTR if the pointer is null, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////////
 static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 {
     if(priv_opt_long == NULL)
@@ -523,5 +528,5 @@ int ParseOptions(int argc, char** argv)
         return generate_opt_long;
     }
 
-    
+
 }
