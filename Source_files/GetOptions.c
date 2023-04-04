@@ -445,9 +445,9 @@ int GetOptionDefinition(char            opt_char            ,
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int GenerateShortOptStr(void)
 {
-    if( (private_options        == NULL ) ||
-        (short_options_string   == NULL ))
+    if(private_options        == NULL)
     {
+        SeverityLog(SVRTY_LVL_INF, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
@@ -481,6 +481,8 @@ static int GenerateShortOptStr(void)
 
     short_options_string = (char*)calloc(strlen(aux_short_options), sizeof(char));
     strcpy(short_options_string, aux_short_options);
+
+    return GET_OPT_SUCCESS;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -492,13 +494,14 @@ static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 {
     if(priv_opt_long == NULL)
     {
+        SeverityLog(SVRTY_LVL_INF, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
     memcpy(&priv_opt_long[0], &opt_long_verbose, sizeof(PRIV_OPT_LONG));
     memcpy(&priv_opt_long[1], &opt_long_brief, sizeof(PRIV_OPT_LONG));
 
-    for(int i = GET_OPT_SIZE_VERB_BRIEF; i = GET_OPT_SIZE_VERB_BRIEF + option_number; i++)
+    for(int i = GET_OPT_SIZE_VERB_BRIEF; i < GET_OPT_SIZE_VERB_BRIEF + option_number; i++)
     {
         memcpy(&priv_opt_long[i], &private_options[i].struct_opt_long, sizeof(PRIV_OPT_LONG));
     }
@@ -528,5 +531,5 @@ int ParseOptions(int argc, char** argv)
         return generate_opt_long;
     }
 
-
+    return GET_OPT_SUCCESS;
 }
