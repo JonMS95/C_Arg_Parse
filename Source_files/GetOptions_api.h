@@ -90,6 +90,8 @@ int GetOptionDefinition(char            opt_char            ,
                         OPT_DATA_TYPE   opt_default_value   ,
                         void*           opt_dest_var        );
 
+int ParseOptions(int argc, char** argv);
+
 /*************************************/
 
 #endif
