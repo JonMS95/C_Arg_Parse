@@ -49,15 +49,15 @@ typedef union
 /// @brief Public structure, meant to be filled by the user.
 typedef struct
 {
-    char            opt_char;
-    char*           opt_long[GET_OPT_SIZE_LONG_MAX];
-    char*           opt_detail[GET_OPT_SIZE_DETAIL_MAX];
-    int             opt_var_type;
-    int             opt_needs_arg;
-    OPT_DATA_TYPE   opt_min_value;
-    OPT_DATA_TYPE   opt_max_value;
-    OPT_DATA_TYPE   opt_default_value;
-    void*           opt_dest_var;
+    char            opt_char                                ;
+    char*           opt_long[GET_OPT_SIZE_LONG_MAX + 1]     ;
+    char*           opt_detail[GET_OPT_SIZE_DETAIL_MAX + 1] ;
+    int             opt_var_type                            ;
+    int             opt_needs_arg                           ;
+    OPT_DATA_TYPE   opt_min_value                           ;
+    OPT_DATA_TYPE   opt_max_value                           ;
+    OPT_DATA_TYPE   opt_default_value                       ;
+    void*           opt_dest_var                            ;
 
 } PUB_OPT_DEFINITION;
 
