@@ -1,14 +1,70 @@
+/************************************/
+/******** Include statements ********/
+/************************************/
+
 #include "../Dependency_files/Header_files/SeverityLog_api.h"
 #include "GetOptions.h"
 #include <stdlib.h>
 #include <string.h>
 
+/************************************/
+
+/***********************************/
+/******** Define statements ********/
+/***********************************/
+
+#define getName(var)  #var
+
+/***********************************/
+
+/***********************************/
+/******** Private variables ********/
+/***********************************/
+
+/******** Private stack variables ********/
+
 static int                  option_number           = 0;
-static char*                short_options_string    = NULL;
-static PRIV_OPT_DEFINITION* private_options         = NULL;
 static int                  verbose_flag            = 1;
 static PRIV_OPT_LONG        opt_long_verbose        = {"verbose"    , no_argument   ,   &verbose_flag,  1};
 static PRIV_OPT_LONG        opt_long_brief          = {"brief"      , no_argument   ,   &verbose_flag,  0};
+
+/******** Private heap variables ********/
+
+static char*                short_options_string    = NULL;
+static PRIV_OPT_DEFINITION* private_options         = NULL;
+
+/***********************************/
+
+/**************************************/
+/******** Function definitions ********/
+/**************************************/
+
+void FreeHeapOptData(void)
+{
+    if(short_options_string == NULL)
+    {
+        SeverityLog(SVRTY_LVL_WNG, GET_OPT_MSG_ALREADY_NULL_PTR);
+        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s\r\n", __FILE__, __func__, __LINE__, getName(short_options_string));
+    }
+    else
+    {
+        free(short_options_string);
+        short_options_string = NULL;
+        option_number = 0;
+    }
+
+    if(private_options == NULL)
+    {
+        SeverityLog(SVRTY_LVL_WNG, GET_OPT_MSG_ALREADY_NULL_PTR);
+        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s\r\n", __FILE__, __func__, __LINE__, getName(private_options));
+    }
+    else
+    {
+        free(private_options);
+        private_options = NULL;
+        option_number = 0;
+    }
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// @brief Looks for every character in private option definitions. Checks if the given character already exists.
@@ -21,11 +77,6 @@ int CheckExistingOptionChar(char current_opt_char)
     {
         if(private_options[i].pub_opt.opt_char == current_opt_char)
         {
-            SeverityLog(SVRTY_LVL_WNG,
-                        GET_OPT_MSG_OPT_CHAR_ALREADY_EXISTS,
-                        private_options[i].pub_opt.opt_char,
-                        private_options[i].pub_opt.opt_long,
-                        private_options[i].pub_opt.opt_detail);
             return GET_OPT_ERR_OPT_CHAR_ALREADY_EXISTS;
         }
     }
@@ -33,11 +84,11 @@ int CheckExistingOptionChar(char current_opt_char)
     return GET_OPT_SUCCESS;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// @brief Looks for every character in private option definitions. Checks if the given lon option string already exists.
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Looks for every character in private option definitions. Checks if the given long option string already exists.
 /// @param current_opt_char Long option that's meant to be checked. 
 /// @return GET_OPT_ERR_OPT_LONG_ALREADY_EXISTS if the character already exists, 0 otherwise.
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CheckExistingOptionLong(char* current_opt_long)
 {
     for(int i = 0; i < option_number; i++)
@@ -297,6 +348,7 @@ int GetOptionDefinition(char            opt_char            ,
     if(opt_char == '\0')
     {
         SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NO_OPT_CHAR);
+        FreeHeapOptData();
         return GET_OPT_ERR_NO_OPT_CHAR;
     }
 
@@ -305,6 +357,8 @@ int GetOptionDefinition(char            opt_char            ,
 
     if(check_existing_option_char < 0)
     {
+        // SeverityLog is called within CheckExistingOptionChar, as long as the data to be shown depends on the private options data.
+        FreeHeapOptData();
         return check_existing_option_char;
     }
 
@@ -312,6 +366,7 @@ int GetOptionDefinition(char            opt_char            ,
     if(opt_long == NULL)
     {
         SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NO_OPT_LONG);
+        FreeHeapOptData();
         return GET_OPT_ERR_NO_OPT_LONG;
     }
 
@@ -321,6 +376,7 @@ int GetOptionDefinition(char            opt_char            ,
         if(strlen(opt_long) > GET_OPT_SIZE_LONG_MAX)
         {
             SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_LONG_LENGTH_EXCEEDED);
+            FreeHeapOptData();
             return GET_OPT_ERR_LONG_LENGTH_EXCEEDED;
         }
     }
@@ -330,6 +386,8 @@ int GetOptionDefinition(char            opt_char            ,
 
     if(check_existing_option_long < 0)
     {
+        // SeverityLog is called within CheckExistingOptionLong, as long as the data to be shown depends on the private options data.
+        FreeHeapOptData();
         return check_existing_option_long;
     }
 
@@ -345,6 +403,7 @@ int GetOptionDefinition(char            opt_char            ,
         if(strlen(opt_detail) > GET_OPT_SIZE_DETAIL_MAX)
         {
             SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_DETAIL_LENGTH_EXCEEDED);
+            FreeHeapOptData();
             return GET_OPT_ERR_DETAIL_LENGTH_EXCEEDED;
         }
     }
@@ -359,6 +418,7 @@ int GetOptionDefinition(char            opt_char            ,
                     opt_char                ,
                     opt_long                ,
                     opt_detail              );
+        FreeHeapOptData();
         return check_valid_data_type;
     }
     
@@ -372,6 +432,7 @@ int GetOptionDefinition(char            opt_char            ,
                     opt_char                    ,
                     opt_long                    ,
                     opt_detail                  );
+        FreeHeapOptData();
         return check_opt_arg_requirement;
     }
 
@@ -388,6 +449,7 @@ int GetOptionDefinition(char            opt_char            ,
                         opt_char                    ,
                         opt_long                    ,
                         opt_detail                  );
+            FreeHeapOptData();
             return check_opt_min_max;
         }
 
@@ -404,6 +466,7 @@ int GetOptionDefinition(char            opt_char            ,
                         opt_char                            ,
                         opt_long                            ,
                         opt_detail                          );
+            FreeHeapOptData();
             return check_default_value;
         }
     }
@@ -416,6 +479,7 @@ int GetOptionDefinition(char            opt_char            ,
                     opt_char                    ,
                     opt_long                    ,
                     opt_detail                  );
+        FreeHeapOptData();
         return GET_OPT_ERR_NULL_DEST_VAR;
     }
 
@@ -433,6 +497,7 @@ int GetOptionDefinition(char            opt_char            ,
     if(fill_private_opt_struct < 0)
     {
         SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_OPT_NUM_ZERO);
+        FreeHeapOptData();
         return fill_private_opt_struct;
     }
 
@@ -447,7 +512,7 @@ static int GenerateShortOptStr(void)
 {
     if(private_options        == NULL)
     {
-        SeverityLog(SVRTY_LVL_INF, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
+        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
@@ -494,7 +559,7 @@ static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 {
     if(priv_opt_long == NULL)
     {
-        SeverityLog(SVRTY_LVL_INF, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
+        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
@@ -511,6 +576,12 @@ static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
     return GET_OPT_SUCCESS;
 }
 
+////////////////////////////////////////////////////////
+/// @brief Parses given options and arguments if needed.
+/// @param argc Argument count.
+/// @param argv Argument character string array.
+/// @return < 0 if any error happened, 0 otherwise.
+////////////////////////////////////////////////////////
 int ParseOptions(int argc, char** argv)
 {
     int generate_short_options_string = GenerateShortOptStr();
@@ -518,6 +589,7 @@ int ParseOptions(int argc, char** argv)
     if(generate_short_options_string < 0)
     {
         SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NULL_PTR);
+        FreeHeapOptData();
         return generate_short_options_string;
     }
 
@@ -528,8 +600,13 @@ int ParseOptions(int argc, char** argv)
     if(generate_opt_long < 0)
     {
         SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NULL_PTR);
+        FreeHeapOptData();
         return generate_opt_long;
     }
 
+
+
     return GET_OPT_SUCCESS;
 }
+
+/**************************************/
