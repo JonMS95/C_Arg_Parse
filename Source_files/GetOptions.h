@@ -35,6 +35,8 @@
 #define GET_OPT_ERR_NULL_DEST_VAR           -11
 #define GET_OPT_ERR_OPT_NUM_ZERO            -12
 #define GET_OPT_ERR_NULL_PTR                -13
+#define GET_OPT_ERR_NO_ARG_FOUND            -14
+#define GET_OPT_ERR_UNKNOWN_OPTION          -15
 
 /******** Messages ********/
 #define GET_OPT_MSG_NO_OPT_CHAR             "No option character provided.\r\n"
@@ -52,6 +54,8 @@
 #define GET_OPT_MSG_OPT_NUM_ZERO            "Current option number is zero. Should not have reached this point.\r\n"
 #define GET_OPT_MSG_NULL_PTR                "NULL pointer found.\r\n"
 #define GET_OPT_MSG_ALREADY_NULL_PTR        "Pointer to memory meant to be freed is NULL.\r\n"
+#define GET_OPT_MSG_NO_ARG_FOUND            "Option %c requires an argument!\r\n"
+#define GET_OPT_MSG_UNKNOWN_OPTION          "Unknown option (%c).\r\n"
 
 /***********************************/
 
