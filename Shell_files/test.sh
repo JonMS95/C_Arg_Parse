@@ -6,4 +6,5 @@ echo
 echo "*******************************"
 echo "Testing 'main' executable file."
 echo "*******************************"
-./Tests/Executable_files/main -a -b 2 -c e -d 1.3
+# ./Tests/Executable_files/main -a -b 2 -c e -d 1.3
+./Tests/Executable_files/main --verbose --brief -t 1
