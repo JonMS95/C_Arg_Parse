@@ -298,9 +298,48 @@ int option_demo(int argc, char** argv)
   exit (0);
 }
 
-int main (int argc, char **argv)
+int TestParseOptions(int argc, char** argv)
 {
-    Test_GetOptionDefinition();
+    int test_int;
+    GetOptionDefinition('t',
+                        "TestParse",
+                        "Test option argument parser.",
+                        GET_OPT_TYPE_INT,
+                        GET_OPT_ARG_REQ_REQUIRED,
+                        (OPT_DATA_TYPE)0,
+                        (OPT_DATA_TYPE)4,
+                        (OPT_DATA_TYPE)3,
+                        &test_int);
+
+    int parse_options = ParseOptions(argc, argv);
+
+    if(parse_options < 0)
+    {
+        return parse_options;
+    }
+
+    return GET_OPT_SUCCESS;
+}
+
+int main(int argc, char **argv)
+{
+    if(Test_GetOptionDefinition() < 0)
+    {
+        SeverityLog(SVRTY_LVL_WNG, "GetOptionDefinition test failed.\r\n");
+    }
+    else
+    {
+        SeverityLog(SVRTY_LVL_INF, "GetOptionDefinition test succeed!\r\n");
+    }
+
+    if(TestParseOptions(argc, argv) < 0)
+    {
+        SeverityLog(SVRTY_LVL_WNG, "ParseOptions test failed.\r\n");
+    }
+    else
+    {
+        SeverityLog(SVRTY_LVL_INF, "ParseOptions test succeed!\r\n");
+    }
 
     return 0;
 }
