@@ -51,6 +51,7 @@
 #define GET_OPT_MSG_NULL_DEST_VAR           "Current option destination value address is not set: -%c --%s (%s).\r\n"
 #define GET_OPT_MSG_OPT_NUM_ZERO            "Current option number is zero. Should not have reached this point.\r\n"
 #define GET_OPT_MSG_NULL_PTR                "NULL pointer found.\r\n"
+#define GET_OPT_MSG_ALREADY_NULL_PTR        "Pointer to memory meant to be freed is NULL.\r\n"
 
 /***********************************/
 
