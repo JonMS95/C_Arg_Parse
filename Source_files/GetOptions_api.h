@@ -90,6 +90,12 @@ int SetOptionDefinition(char            opt_char            ,
                         OPT_DATA_TYPE   opt_default_value   ,
                         void*           opt_dest_var        );
 
+////////////////////////////////////////////////////////
+/// @brief Parses given options and arguments if needed.
+/// @param argc Argument count.
+/// @param argv Argument character string array.
+/// @return < 0 if any error happened, 0 otherwise.
+////////////////////////////////////////////////////////
 int ParseOptions(int argc, char** argv);
 
 /*************************************/
