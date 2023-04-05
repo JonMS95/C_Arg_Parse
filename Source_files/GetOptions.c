@@ -39,7 +39,7 @@ static PRIV_OPT_DEFINITION* private_options         = NULL;
 /******** Function definitions ********/
 /**************************************/
 
-void FreeHeapOptData(void)
+static void FreeHeapOptData(void)
 {
     if(short_options_string == NULL)
     {
@@ -71,7 +71,7 @@ void FreeHeapOptData(void)
 /// @param current_opt_char Character that's meant to be checked. 
 /// @return GET_OPT_ERR_OPT_CHAR_ALREADY_EXISTS if the character already exists, 0 otherwise.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckExistingOptionChar(char current_opt_char)
+static int CheckExistingOptionChar(char current_opt_char)
 {
     for(int i = 0; i < option_number; i++)
     {
@@ -89,7 +89,7 @@ int CheckExistingOptionChar(char current_opt_char)
 /// @param current_opt_char Long option that's meant to be checked. 
 /// @return GET_OPT_ERR_OPT_LONG_ALREADY_EXISTS if the character already exists, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckExistingOptionLong(char* current_opt_long)
+static int CheckExistingOptionLong(char* current_opt_long)
 {
     for(int i = 0; i < option_number; i++)
     {
@@ -582,7 +582,7 @@ static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 /// @param arg Argument to be casted.
 /// @param dest Destination variable.
 ///////////////////////////////////////////////////////////////////////////////
-void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_TYPE* dest)
+static void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_TYPE* dest)
 {
     int var_type = priv_opt_def->pub_opt.opt_var_type;
 
@@ -630,7 +630,7 @@ void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_T
 /// @param priv_opt_def Private option definition, where the target variable is found.
 /// @param src Variable which stores the value to set.
 //////////////////////////////////////////////////////////////////////////////////////
-void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
+static void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
 {
     switch(priv_opt_def->pub_opt.opt_var_type)
     {
