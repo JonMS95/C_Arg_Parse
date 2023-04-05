@@ -31,7 +31,7 @@
 #define GET_OPT_ERR_UNKNOWN_TYPE            -7
 #define GET_OPT_ERR_UNKNOWN_ARG_REQ         -8
 #define GET_OPT_ERR_WRONG_BOUNDARIES        -9
-#define GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS   -10
+#define GET_OPT_ERR_VAL_OUT_OF_BOUNDS       -10
 #define GET_OPT_ERR_NULL_DEST_VAR           -11
 #define GET_OPT_ERR_OPT_NUM_ZERO            -12
 #define GET_OPT_ERR_NULL_PTR                -13
@@ -57,6 +57,7 @@
 #define GET_OPT_MSG_NO_ARG_FOUND            "Option %c requires an argument!\r\n"
 #define GET_OPT_MSG_UNKNOWN_OPTION          "Unknown option (%c).\r\n"
 #define GET_OPT_MSG_STRING_NOT_CHAR         "Passed string as argument to an option that requires a character instead: -%c --%s (%s)\r\n."
+#define GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS  "Provided value is out of boundaries for current option: -%c --%s (%s).\r\n"
 
 /***********************************/
 
