@@ -604,28 +604,27 @@ int ParseOptions(int argc, char** argv)
         return generate_opt_long;
     }
 
-    int option;
-    int option_index = 0;
-    while((option = getopt_long(argc, argv, short_options_string, priv_opt_long, &priv_opt_long)) != -1)
+    int current_option;
+    int current_option_index = 0;
+    while((current_option = getopt_long(argc, argv, short_options_string, priv_opt_long, &current_option_index)) != -1)
     {
-        if(option == -1)
+        if(current_option == -1)
         {
             break;
         }
 
-        switch (option)
+        switch (current_option)
         {
             // Option sets a flag.
             case 0:
             {
-                for(int i = 0; i < sizeof(priv_opt_long) / sizeof(priv_opt_long[0]); i++)
+                if(verbose_flag == 0)
                 {
-                    if(strcmp(argv[optind], priv_opt_long[i].name == 0))
-                    {
-                        SeverityLog(SVRTY_LVL_DBG, "%s\r\n", priv_opt_long[i].name);
-                        SeverityLog(SVRTY_LVL_INF, "%s flag set to %d.\r\n", getName(priv_opt_long[i].flag), *(priv_opt_long[i].flag));
-                        break;
-                    }
+                    SetSeverityLogMask(SVRTY_LOG_MASK_ERR);
+                }
+                else
+                {
+                    SetSeverityLogMask(SVRTY_LOG_MASK_ALL);
                 }
             }
             break;
@@ -650,10 +649,78 @@ int ParseOptions(int argc, char** argv)
 
             default:
             {
+                // First of all, get the index of the current option within the private option structure array.
 
+                int current_option_index;
+                for(int current_option_index = 0; current_option_index < option_number; current_option_index++)
+                {
+                    if(private_options[current_option_index].pub_opt.opt_char == current_option)
+                    {
+                        break;
+                    }
+                }
+
+                if(private_options[current_option_index].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_NO)
+                {
+                    *((bool*)(private_options[current_option_index].pub_opt.opt_dest_var)) = (bool)atoi(optarg);
+                    private_options[current_option_index].opt_has_value = true;
+                    // Go to next option.
+                    break;
+                }
+
+                if(private_options[current_option_index].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_OPTIONAL)
+                {
+                    // Go to next option.
+                    break;
+                }
+
+                OPT_DATA_TYPE parsed_argument;
+
+                switch(private_options[current_option_index].pub_opt.opt_var_type)
+                {
+                    // TO DO: for each case, check if the provided value fits in the range delimited bu the option's boundaries.
+                    // Use CheckOptLowerOrEqual for the mentioned purpose.
+                    case GET_OPT_TYPE_INT:
+                    {
+                        parsed_argument.integer = atoi(optarg);
+                    }
+                    break;
+
+                    case GET_OPT_TYPE_CHAR:
+                    {
+                        if(strlen(optarg) > 1)
+                        {
+                            SeverityLog(SVRTY_LVL_WNG,
+                                        GET_OPT_MSG_STRING_NOT_CHAR,
+                                        private_options[current_option_index].pub_opt.opt_char,
+                                        private_options[current_option_index].pub_opt.opt_long,
+                                        private_options[current_option_index].pub_opt.opt_detail);
+                        }
+                        parsed_argument.integer = (char)atoi(optarg);
+                    }
+                    break;
+
+                    case GET_OPT_TYPE_FLOAT:
+                    {
+                        parsed_argument.floating = atof(optarg);
+                    }
+                    break;
+
+                    case GET_OPT_TYPE_DOUBLE:
+                    {
+                        parsed_argument.doubling = strtod(optarg, NULL);
+                    }
+                    break;
+
+                    default:
+                    break;
+                }
             }
             break;
         }
+
+        // TO DO: check every option in private options struct array. For each option, check if any value has been provided (has_value).
+        // If not, give it its default value.
     }
 
     return GET_OPT_SUCCESS;
