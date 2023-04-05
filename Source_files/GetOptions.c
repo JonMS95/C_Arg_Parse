@@ -576,6 +576,60 @@ static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
     return GET_OPT_SUCCESS;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+/// @brief Casts the provided option argument to the proper type and stores it.
+/// @param priv_opt_def Private option definition.
+/// @param arg Argument to be casted.
+/// @param dest Destination variable.
+///////////////////////////////////////////////////////////////////////////////
+void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_TYPE* dest)
+{
+    int var_type = priv_opt_def->pub_opt.opt_var_type;
+
+    switch(var_type)
+    {
+        case GET_OPT_TYPE_INT:
+        {
+            dest->integer = atoi(arg);
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR:
+        {
+            if(strlen(optarg) > 1)
+            {
+                SeverityLog(SVRTY_LVL_WNG                   ,
+                            GET_OPT_MSG_STRING_NOT_CHAR     ,
+                            priv_opt_def->pub_opt.opt_char  ,
+                            priv_opt_def->pub_opt.opt_long  ,
+                            priv_opt_def->pub_opt.opt_detail);
+            }
+            dest->character = (char)atoi(arg);
+        }
+        break;
+
+        case GET_OPT_TYPE_FLOAT:
+        {
+            dest->floating = atof(arg);
+        }
+        break;
+
+        case GET_OPT_TYPE_DOUBLE:
+        {
+            dest->doubling = strtod(arg, NULL);
+        }
+        break;
+
+        default:
+        break;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+/// @brief Assign value to the destination variable.
+/// @param priv_opt_def Private option definition, where the target variable is found.
+/// @param src Variable which stores the value to set.
+//////////////////////////////////////////////////////////////////////////////////////
 void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
 {
     switch(priv_opt_def->pub_opt.opt_var_type)
@@ -706,6 +760,7 @@ int ParseOptions(int argc, char** argv)
 
                 if(private_options[current_option_index].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_OPTIONAL)
                 {
+                    // Check whether anyvalue has been provided for the current option.
                     if(optarg == NULL)
                     {
                         // Go to next option. The default value will be assigned to the current option later.
@@ -716,43 +771,7 @@ int ParseOptions(int argc, char** argv)
                 OPT_DATA_TYPE parsed_argument;
                 int check_value_in_range;
 
-                switch(private_options[current_option_index].pub_opt.opt_var_type)
-                {
-                    case GET_OPT_TYPE_INT:
-                    {
-                        parsed_argument.integer = atoi(optarg);
-                    }
-                    break;
-
-                    case GET_OPT_TYPE_CHAR:
-                    {
-                        if(strlen(optarg) > 1)
-                        {
-                            SeverityLog(SVRTY_LVL_WNG,
-                                        GET_OPT_MSG_STRING_NOT_CHAR,
-                                        private_options[current_option_index].pub_opt.opt_char,
-                                        private_options[current_option_index].pub_opt.opt_long,
-                                        private_options[current_option_index].pub_opt.opt_detail);
-                        }
-                        parsed_argument.character = (char)atoi(optarg);
-                    }
-                    break;
-
-                    case GET_OPT_TYPE_FLOAT:
-                    {
-                        parsed_argument.floating = atof(optarg);
-                    }
-                    break;
-
-                    case GET_OPT_TYPE_DOUBLE:
-                    {
-                        parsed_argument.doubling = strtod(optarg, NULL);
-                    }
-                    break;
-
-                    default:
-                    break;
-                }
+                CastParsedArgument(&private_options[current_option_index], optarg, &parsed_argument);
 
                 // Check if the provided value fits in the range delimited by the option's boundaries
                 check_value_in_range = CheckValueInRange(   private_options[current_option_index].pub_opt.opt_var_type  ,
@@ -773,39 +792,6 @@ int ParseOptions(int argc, char** argv)
 
                 // If the value provided value is OK, then assign it to the destination variable.
                 AssignValue(&private_options[current_option_index], parsed_argument);
-
-                // // If the value provided value is OK, then assign it to the destination variable.
-                // switch(private_options[current_option_index].pub_opt.opt_var_type)
-                // {
-                //     case GET_OPT_TYPE_INT:
-                //     {
-                //         *(int*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.integer;
-                //     }
-                //     break;
-
-                //     case GET_OPT_TYPE_CHAR:
-                //     {
-                //         *(char*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.character;
-                //     }
-                //     break;
-
-                //     case GET_OPT_TYPE_FLOAT:
-                //     {
-                //         *(float*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.floating;
-                //     }
-                //     break;
-
-                //     case GET_OPT_TYPE_DOUBLE:
-                //     {
-                //         *(double*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.doubling;
-                //     }
-                //     break;
-
-                //     default:
-                //     break;
-                // }
-
-                // private_options[current_option_index].opt_has_value = true;
             }
             break;
         }
