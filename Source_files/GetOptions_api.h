@@ -80,7 +80,7 @@ typedef struct
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened.
 //////////////////////////////////////////////////////////////////////////////
-int GetOptionDefinition(char            opt_char            ,
+int SetOptionDefinition(char            opt_char            ,
                         char*           opt_long            ,
                         char*           opt_detail          ,
                         int             opt_var_type        ,
