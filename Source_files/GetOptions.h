@@ -56,6 +56,7 @@
 #define GET_OPT_MSG_ALREADY_NULL_PTR        "Pointer to memory meant to be freed is NULL.\r\n"
 #define GET_OPT_MSG_NO_ARG_FOUND            "Option %c requires an argument!\r\n"
 #define GET_OPT_MSG_UNKNOWN_OPTION          "Unknown option (%c).\r\n"
+#define GET_OPT_MSG_STRING_NOT_CHAR         "Passed string as argument to an option that requires a character instead: -%c --%s (%s)\r\n."
 
 /***********************************/
 
