@@ -112,7 +112,7 @@ static int CheckExistingOptionLong(char* current_opt_long)
 /// @param opt_var_type Option variable type.
 /// @return GET_OPT_ERR_UNKNOWN_TYPE if the data type is unknown, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-static int CheckValidDataType(int opt_var_type)
+int CheckValidDataType(int opt_var_type)
 {
     for(int i = GET_OPT_TYPE_MIN; i <= GET_OPT_TYPE_MAX; i++)
     {
@@ -130,7 +130,7 @@ static int CheckValidDataType(int opt_var_type)
 /// @param arg_requirement Argument requirement level (GET_OPT_ARG_REQ_NO, GET_OPT_ARG_REQ_REQUIRED, GET_OPT_ARG_REQ_OPTIONAL).
 /// @return GET_OPT_ERR_UNKNOWN_ARG_REQ if the option argument requirement specifier is unknown, 0 otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static int CheckOptArgRequirement(int arg_requirement)
+int CheckOptArgRequirement(int arg_requirement)
 {
     for(int i = GET_OPT_ARG_REQ_MIN; i <= GET_OPT_ARG_REQ_MAX; i++)
     {
@@ -150,7 +150,7 @@ static int CheckOptArgRequirement(int arg_requirement)
 /// @param max Maximum value.
 /// @return GET_OPT_ERR_WRONG_BOUNDARIES if min > max, 0 otherwise.
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
+int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
 {
     switch (opt_var_type)
     {
@@ -216,7 +216,7 @@ static int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TY
 /// @param opt_max_value Option maximum value.
 /// @return GET_OPT_ERR_WRONG_BOUNDARIES if min > max, 0 otherwise.
 ///////////////////////////////////////////////////////////////////////
-static int CheckBoundaries(int opt_var_type    ,
+int CheckBoundaries(int opt_var_type    ,
                     OPT_DATA_TYPE opt_min_value ,
                     OPT_DATA_TYPE opt_max_value )
 {
@@ -238,7 +238,7 @@ static int CheckBoundaries(int opt_var_type    ,
 /// @param opt_default_value Option default value.
 /// @return GET_OPT_ERR_VAL_OUT_OF_BOUNDS if value is out of bounds, GET_OPT_SUCCESS otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-static int CheckValueInRange(   int             opt_var_type        ,
+int CheckValueInRange(   int             opt_var_type        ,
                                 OPT_DATA_TYPE   opt_min_value     ,
                                 OPT_DATA_TYPE   opt_max_value     ,
                                 OPT_DATA_TYPE   opt_check_value )
@@ -268,7 +268,7 @@ static int CheckValueInRange(   int             opt_var_type        ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return GET_OPT_ERR_OPT_NUM_ZERO if there are no options defined, 0 otherwise..
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-static int FillPrivateOptStruct(   char            opt_char            ,
+int FillPrivateOptStruct(   char            opt_char            ,
                             char*           opt_long            ,
                             char*           opt_detail          ,
                             int             opt_var_type        ,
@@ -508,7 +508,7 @@ int SetOptionDefinition(char            opt_char            ,
 /// @brief Generates short options string based on what's found in private_options.
 /// @return GET_OPT_ERR_NULL_PTR if pointers to private options or short_options_string are uninitialized.
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-static int GenerateShortOptStr(void)
+int GenerateShortOptStr(void)
 {
     if(private_options        == NULL)
     {
@@ -555,7 +555,7 @@ static int GenerateShortOptStr(void)
 /// @param priv_opt_long Pointer to the struct array that's meant to be populated.
 /// @return GET_OPT_ERR_NULL_PTR if the pointer is null, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////////
-static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
+int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 {
     if(priv_opt_long == NULL)
     {

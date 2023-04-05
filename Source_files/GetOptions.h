@@ -84,29 +84,29 @@ typedef struct
 void FreeHeapOptData(void);
 int CheckExistingOptionChar(char current_opt_char);
 int CheckExistingOptionLong(char* current_opt_long);
-static int CheckValidDataType(int opt_var_type);
-static int CheckOptArgRequirement(int arg_requirement);
-static int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max);
-static int CheckBoundaries(int opt_var_type    ,
-                    OPT_DATA_TYPE opt_min_value ,
-                    OPT_DATA_TYPE opt_max_value );
-static int CheckValueInRange(   int             opt_var_type        ,
-                                OPT_DATA_TYPE   opt_min_value     ,
-                                OPT_DATA_TYPE   opt_max_value     ,
-                                OPT_DATA_TYPE   opt_check_value );
-static int FillPrivateOptStruct(char            opt_char            ,
-                                char*           opt_long            ,
-                                char*           opt_detail          ,
-                                int             opt_var_type        ,
-                                int             opt_needs_arg       ,
-                                OPT_DATA_TYPE   opt_min_value       ,
-                                OPT_DATA_TYPE   opt_max_value       ,
-                                OPT_DATA_TYPE   opt_default_value   ,
-                                void*           opt_dest_var        );
-static int GenerateShortOptStr(void);
-static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long);
-static void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_TYPE* dest);
-static void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src);
+int CheckValidDataType(int opt_var_type);
+int CheckOptArgRequirement(int arg_requirement);
+int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max);
+int CheckBoundaries(int opt_var_type    ,
+             OPT_DATA_TYPE opt_min_value ,
+             OPT_DATA_TYPE opt_max_value );
+int CheckValueInRange(   int             opt_var_type        ,
+                         OPT_DATA_TYPE   opt_min_value     ,
+                         OPT_DATA_TYPE   opt_max_value     ,
+                         OPT_DATA_TYPE   opt_check_value );
+int FillPrivateOptStruct(char            opt_char            ,
+                         char*           opt_long            ,
+                         char*           opt_detail          ,
+                         int             opt_var_type        ,
+                         int             opt_needs_arg       ,
+                         OPT_DATA_TYPE   opt_min_value       ,
+                         OPT_DATA_TYPE   opt_max_value       ,
+                         OPT_DATA_TYPE   opt_default_value   ,
+                         void*           opt_dest_var        );
+int GenerateShortOptStr(void);
+int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long);
+void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_TYPE* dest);
+void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src);
 
 /*************************************/
 
