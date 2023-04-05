@@ -154,7 +154,7 @@ GetOptionDefinition_Test_Case GetOptionDefinition_Test_Indexes[]=
     {10,        8,          0,      0,              2,              0,              0,              0,                  0,              GET_OPT_ERR_UNKNOWN_ARG_REQ         },
     {11,        9,          0,      0,              0,              1,              1,              0,                  0,              GET_OPT_ERR_WRONG_BOUNDARIES        },
     {12,        10,         0,      0,              3,              1,              1,              0,                  0,              GET_OPT_SUCCESS                     },
-    {13,        11,         0,      0,              0,              0,              0,              1,                  0,              GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS   },
+    {13,        11,         0,      0,              0,              0,              0,              1,                  0,              GET_OPT_ERR_VAL_OUT_OF_BOUNDS       },
     {14,        12,         0,      0,              0,              0,              0,              0,                  1,              GET_OPT_ERR_NULL_DEST_VAR           },
 
 };
