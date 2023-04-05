@@ -236,20 +236,20 @@ static int CheckBoundaries(int opt_var_type    ,
 /// @param opt_min_value Option minimum value.
 /// @param opt_max_value Option maximum value.
 /// @param opt_default_value Option default value.
-/// @return GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS if value is out of bounds, GET_OPT_SUCCESS otherwise.
+/// @return GET_OPT_ERR_VAL_OUT_OF_BOUNDS if value is out of bounds, GET_OPT_SUCCESS otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-static int CheckDefaultValue(  int             opt_var_type        ,
-                        OPT_DATA_TYPE   opt_min_value     ,
-                        OPT_DATA_TYPE   opt_max_value     ,
-                        OPT_DATA_TYPE   opt_default_value )
+static int CheckValueInRange(   int             opt_var_type        ,
+                                OPT_DATA_TYPE   opt_min_value     ,
+                                OPT_DATA_TYPE   opt_max_value     ,
+                                OPT_DATA_TYPE   opt_check_value )
 {
-    int check_def_val_be_min = CheckOptLowerOrEqual(opt_var_type, opt_min_value, opt_default_value);
-    int check_def_val_le_max = CheckOptLowerOrEqual(opt_var_type, opt_default_value, opt_max_value);
+    int check_def_val_be_min = CheckOptLowerOrEqual(opt_var_type, opt_min_value, opt_check_value);
+    int check_def_val_le_max = CheckOptLowerOrEqual(opt_var_type, opt_check_value, opt_max_value);
 
     if( check_def_val_be_min < 0 ||
         check_def_val_le_max < 0)
     {
-        return GET_OPT_ERR_DEF_VAL_OUT_OF_BOUNDS;
+        return GET_OPT_ERR_VAL_OUT_OF_BOUNDS;
     }
 
     return GET_OPT_SUCCESS;
@@ -454,7 +454,7 @@ int GetOptionDefinition(char            opt_char            ,
         }
 
         // Check if default value is within boundaries or not.
-        int check_default_value = CheckDefaultValue(opt_var_type        ,
+        int check_default_value = CheckValueInRange(opt_var_type        ,
                                                     opt_min_value       ,
                                                     opt_max_value       ,
                                                     opt_default_value   );
@@ -576,6 +576,41 @@ static int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
     return GET_OPT_SUCCESS;
 }
 
+void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
+{
+    switch(priv_opt_def->pub_opt.opt_var_type)
+    {
+        case GET_OPT_TYPE_INT:
+        {
+            *(int*)(priv_opt_def->pub_opt.opt_dest_var) = src.integer;
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR:
+        {
+            *(char*)(priv_opt_def->pub_opt.opt_dest_var) = src.character;
+        }
+        break;
+
+        case GET_OPT_TYPE_FLOAT:
+        {
+            *(float*)(priv_opt_def->pub_opt.opt_dest_var) = src.floating;
+        }
+        break;
+
+        case GET_OPT_TYPE_DOUBLE:
+        {
+            *(double*)(priv_opt_def->pub_opt.opt_dest_var) = src.doubling;
+        }
+        break;
+
+        default:
+        break;
+    }
+
+    priv_opt_def->opt_has_value = true;
+}
+
 ////////////////////////////////////////////////////////
 /// @brief Parses given options and arguments if needed.
 /// @param argc Argument count.
@@ -652,7 +687,7 @@ int ParseOptions(int argc, char** argv)
                 // First of all, get the index of the current option within the private option structure array.
 
                 int current_option_index;
-                for(int current_option_index = 0; current_option_index < option_number; current_option_index++)
+                for(current_option_index = 0; current_option_index < option_number; current_option_index++)
                 {
                     if(private_options[current_option_index].pub_opt.opt_char == current_option)
                     {
@@ -660,6 +695,7 @@ int ParseOptions(int argc, char** argv)
                     }
                 }
 
+                // Check if the option is boolean.
                 if(private_options[current_option_index].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_NO)
                 {
                     *((bool*)(private_options[current_option_index].pub_opt.opt_dest_var)) = (bool)atoi(optarg);
@@ -670,16 +706,18 @@ int ParseOptions(int argc, char** argv)
 
                 if(private_options[current_option_index].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_OPTIONAL)
                 {
-                    // Go to next option.
-                    break;
+                    if(optarg == NULL)
+                    {
+                        // Go to next option. The default value will be assigned to the current option later.
+                        break;
+                    }
                 }
 
                 OPT_DATA_TYPE parsed_argument;
+                int check_value_in_range;
 
                 switch(private_options[current_option_index].pub_opt.opt_var_type)
                 {
-                    // TO DO: for each case, check if the provided value fits in the range delimited bu the option's boundaries.
-                    // Use CheckOptLowerOrEqual for the mentioned purpose.
                     case GET_OPT_TYPE_INT:
                     {
                         parsed_argument.integer = atoi(optarg);
@@ -696,7 +734,7 @@ int ParseOptions(int argc, char** argv)
                                         private_options[current_option_index].pub_opt.opt_long,
                                         private_options[current_option_index].pub_opt.opt_detail);
                         }
-                        parsed_argument.integer = (char)atoi(optarg);
+                        parsed_argument.character = (char)atoi(optarg);
                     }
                     break;
 
@@ -715,12 +753,74 @@ int ParseOptions(int argc, char** argv)
                     default:
                     break;
                 }
+
+                // Check if the provided value fits in the range delimited by the option's boundaries
+                check_value_in_range = CheckValueInRange(   private_options[current_option_index].pub_opt.opt_var_type  ,
+                                                            private_options[current_option_index].pub_opt.opt_min_value ,
+                                                            private_options[current_option_index].pub_opt.opt_max_value ,
+                                                            parsed_argument                                             );
+
+                if(check_value_in_range < 0)
+                {
+                    SeverityLog(SVRTY_LVL_ERR                                           ,
+                                GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS                      ,
+                                private_options[current_option_index].pub_opt.opt_char  ,
+                                private_options[current_option_index].pub_opt.opt_long  ,
+                                private_options[current_option_index].pub_opt.opt_detail);
+                    FreeHeapOptData();
+                    return check_value_in_range;
+                }
+
+                // If the value provided value is OK, then assign it to the destination variable.
+                AssignValue(&private_options[current_option_index], parsed_argument);
+
+                // // If the value provided value is OK, then assign it to the destination variable.
+                // switch(private_options[current_option_index].pub_opt.opt_var_type)
+                // {
+                //     case GET_OPT_TYPE_INT:
+                //     {
+                //         *(int*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.integer;
+                //     }
+                //     break;
+
+                //     case GET_OPT_TYPE_CHAR:
+                //     {
+                //         *(char*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.character;
+                //     }
+                //     break;
+
+                //     case GET_OPT_TYPE_FLOAT:
+                //     {
+                //         *(float*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.floating;
+                //     }
+                //     break;
+
+                //     case GET_OPT_TYPE_DOUBLE:
+                //     {
+                //         *(double*)(private_options[current_option_index].pub_opt.opt_dest_var) = parsed_argument.doubling;
+                //     }
+                //     break;
+
+                //     default:
+                //     break;
+                // }
+
+                // private_options[current_option_index].opt_has_value = true;
             }
             break;
         }
 
         // TO DO: check every option in private options struct array. For each option, check if any value has been provided (has_value).
         // If not, give it its default value.
+        for(int current_option_index = 0; current_option_index < option_number; current_option_index++)
+        {
+            if(private_options[current_option_index].opt_has_value == false)
+            {
+                // If the value provided value is OK, then assign it to the destination variable.
+                AssignValue(&private_options[current_option_index], private_options[current_option_index].pub_opt.opt_default_value);
+                private_options[current_option_index].opt_has_value = true;
+            }
+        }
     }
 
     return GET_OPT_SUCCESS;
