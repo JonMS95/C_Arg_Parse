@@ -5,7 +5,8 @@
 #include "../Dependency_files/Header_files/SeverityLog_api.h"
 #include "GetOptions.h"
 #include <stdlib.h>
-#include <string.h>
+#include <string.h> // strlen, strcmp
+#include <limits.h> // INT_MIN, INT_MAX, ...
 
 /************************************/
 
@@ -502,6 +503,65 @@ int SetOptionDefinition(char            opt_char            ,
     }
 
     return GET_OPT_SUCCESS;
+}
+
+int SetOptionDefinitionBool(char            opt_char            ,
+                            char*           opt_long            ,
+                            char*           opt_detail          ,
+                            OPT_DATA_TYPE   opt_default_value   ,
+                            void*           opt_dest_var        )
+{
+    int set_opt_def =   SetOptionDefinition(opt_char            ,
+                                            opt_long            ,
+                                            opt_detail          ,
+                                            GET_OPT_TYPE_INT    ,
+                                            GET_OPT_ARG_REQ_NO  ,
+                                            (OPT_DATA_TYPE)0    ,
+                                            (OPT_DATA_TYPE)1    ,
+                                            opt_default_value   ,
+                                            opt_dest_var        );
+    
+    return set_opt_def;
+}
+
+int SetOptionDefinitionInt( char            opt_char            ,
+                            char*           opt_long            ,
+                            char*           opt_detail          ,
+                            int             opt_min_value       ,
+                            int             opt_max_value       ,
+                            int             opt_default_value   ,
+                            void*           opt_dest_var        )
+{
+    int set_opt_def =   SetOptionDefinition(opt_char                        ,
+                                            opt_long                        ,
+                                            opt_detail                      ,
+                                            GET_OPT_TYPE_INT                ,
+                                            GET_OPT_ARG_REQ_REQUIRED        ,
+                                            (OPT_DATA_TYPE)opt_min_value    ,
+                                            (OPT_DATA_TYPE)opt_max_value    ,
+                                            (OPT_DATA_TYPE)opt_default_value,
+                                            opt_dest_var                    );
+    
+    return set_opt_def;
+}
+
+int SetOptionDefinitionIntNL(   char            opt_char            ,
+                                char*           opt_long            ,
+                                char*           opt_detail          ,
+                                int             opt_default_value   ,
+                                void*           opt_dest_var        )
+{
+    int set_opt_def =   SetOptionDefinition(opt_char                        ,
+                                            opt_long                        ,
+                                            opt_detail                      ,
+                                            GET_OPT_TYPE_INT                ,
+                                            GET_OPT_ARG_REQ_REQUIRED        ,
+                                            (OPT_DATA_TYPE)INT_MIN          ,
+                                            (OPT_DATA_TYPE)INT_MAX          ,
+                                            (OPT_DATA_TYPE)opt_default_value,
+                                            opt_dest_var                    );
+    
+    return set_opt_def;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
