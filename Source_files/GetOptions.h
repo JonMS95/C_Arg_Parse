@@ -44,7 +44,7 @@
 #define GET_OPT_MSG_NO_OPT_LONG             "No option long form provided.\r\n"
 #define GET_OPT_MSG_LONG_LENGTH_EXCEEDED    "Long option definition exceeds maximum length.\r\n"
 #define GET_OPT_MSG_OPT_LONG_ALREADY_EXISTS "Option long string already exists -%c --%s (%s).\r\n"
-#define GET_OPT_MSG_NO_OPT_DETAIL           "No option detail provided.\r\n"
+#define GET_OPT_MSG_NO_OPT_DETAIL           "No option detail provided for the current option: -%c --%s.\r\n"
 #define GET_OPT_MSG_DETAIL_LENGTH_EXCEEDED  "Option detail definition exceeds maximum length.\r\n"
 #define GET_OPT_MSG_UNKNOWN_TYPE            "Unknown data type: -%c --%s (%s).\r\n"
 #define GET_OPT_MSG_UNKNOWN_ARG_REQ         "Provided unknown argument requirement for the current option: -%c --%s (%s)\r\n"
