@@ -397,7 +397,10 @@ int SetOptionDefinition(char            opt_char            ,
     // Check if option detail exists.
     if(opt_detail == NULL)
     {
-        SeverityLog(SVRTY_LVL_WNG, GET_OPT_MSG_NO_OPT_DETAIL);
+        SeverityLog(SVRTY_LVL_WNG               ,
+                    GET_OPT_MSG_NO_OPT_DETAIL   ,
+                    opt_char                    ,
+                    opt_long                    );
     }
 
     // If option detail exists, then check if its length exceeds the allowed maximum.
@@ -1095,17 +1098,17 @@ int ParseOptions(int argc, char** argv)
             }
             break;
         }
+    }
 
-        // TO DO: check every option in private options struct array. For each option, check if any value has been provided (has_value).
-        // If not, give it its default value.
-        for(int current_option_index = 0; current_option_index < option_number; current_option_index++)
+    // For each option, check if any value has been provided (has_value).
+    // If not, give it its default value.
+    for(int current_option_index = 0; current_option_index < option_number; current_option_index++)
+    {
+        if(private_options[current_option_index].opt_has_value == false)
         {
-            if(private_options[current_option_index].opt_has_value == false)
-            {
-                // If the value provided value is OK, then assign it to the destination variable.
-                AssignValue(&private_options[current_option_index], private_options[current_option_index].pub_opt.opt_default_value);
-                private_options[current_option_index].opt_has_value = true;
-            }
+            // If the value provided value is OK, then assign it to the destination variable.
+            AssignValue(&private_options[current_option_index], private_options[current_option_index].pub_opt.opt_default_value);
+            private_options[current_option_index].opt_has_value = true;
         }
     }
 
