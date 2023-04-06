@@ -46,7 +46,9 @@ typedef union
 
 } OPT_DATA_TYPE;
 
+////////////////////////////////////////////////////////////
 /// @brief Public structure, meant to be filled by the user.
+////////////////////////////////////////////////////////////
 typedef struct
 {
     char            opt_char                                ;
@@ -90,6 +92,167 @@ int SetOptionDefinition(char            opt_char            ,
                         OPT_DATA_TYPE   opt_default_value   ,
                         void*           opt_dest_var        );
 
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set boolean option definition. 
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionBool(char            opt_char            ,
+                            char*           opt_long            ,
+                            char*           opt_detail          ,
+                            OPT_DATA_TYPE   opt_default_value   ,
+                            void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set integer option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_min_value Option minimum value.
+/// @param opt_max_value Option maximum value.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionInt( char            opt_char            ,
+                            char*           opt_long            ,
+                            char*           opt_detail          ,
+                            int             opt_min_value       ,
+                            int             opt_max_value       ,
+                            int             opt_default_value   ,
+                            void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set integer option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionIntNL(   char            opt_char            ,
+                                char*           opt_long            ,
+                                char*           opt_detail          ,
+                                int             opt_default_value   ,
+                                void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set char option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_min_value Option minimum value.
+/// @param opt_max_value Option maximum value.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionChar(char            opt_char            ,
+                            char*           opt_long            ,
+                            char*           opt_detail          ,
+                            char            opt_min_value       ,
+                            char            opt_max_value       ,
+                            char            opt_default_value   ,
+                            void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set char option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionCharNL(  char            opt_char            ,
+                                char*           opt_long            ,
+                                char*           opt_detail          ,
+                                char            opt_default_value   ,
+                                void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set float option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_min_value Option minimum value.
+/// @param opt_max_value Option maximum value.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionFloat(   char            opt_char            ,
+                                char*           opt_long            ,
+                                char*           opt_detail          ,
+                                float           opt_min_value       ,
+                                float           opt_max_value       ,
+                                float           opt_default_value   ,
+                                void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set float option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionFloatNL( char            opt_char            ,
+                                char*           opt_long            ,
+                                char*           opt_detail          ,
+                                float           opt_default_value   ,
+                                void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set double option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_min_value Option minimum value.
+/// @param opt_max_value Option maximum value.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionDouble(  char            opt_char            ,
+                                char*           opt_long            ,
+                                char*           opt_detail          ,
+                                double          opt_min_value       ,
+                                double          opt_max_value       ,
+                                double          opt_default_value   ,
+                                void*           opt_dest_var        );
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set double option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionDoubleNL(char            opt_char            ,
+                                char*           opt_long            ,
+                                char*           opt_detail          ,
+                                float           opt_default_value   ,
+                                void*           opt_dest_var        );
+
+/*************************************/
+
+///////////////////////////////////////////////////////////////////////////
+/// @brief Set multiple option definition taking a struct array as input. 
+/// @param pub_opt_def Head of the array which includes option definitions.
+/// @param pub_opt_def_size Array size.
+/// @return < 0 if any error happened, 0 otherwise.
+///////////////////////////////////////////////////////////////////////////
+int GetOptDefFromStruct(PUB_OPT_DEFINITION* pub_opt_def, int pub_opt_def_size);
+
 ////////////////////////////////////////////////////////
 /// @brief Parses given options and arguments if needed.
 /// @param argc Argument count.
@@ -97,7 +260,5 @@ int SetOptionDefinition(char            opt_char            ,
 /// @return < 0 if any error happened, 0 otherwise.
 ////////////////////////////////////////////////////////
 int ParseOptions(int argc, char** argv);
-
-/*************************************/
 
 #endif
