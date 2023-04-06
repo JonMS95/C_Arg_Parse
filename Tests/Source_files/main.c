@@ -14,14 +14,14 @@
 typedef struct
 {
     char            opt_char[16]        ;
-    char*           opt_long[14]       ;
-    char*           opt_det[3]        ;
+    char*           opt_long[14]        ;
+    char*           opt_det[3]          ;
     int             opt_var_type[3]     ;
     int             opt_needs_arg[4]    ;
     OPT_DATA_TYPE   opt_min_value[2]    ;
     OPT_DATA_TYPE   opt_max_value[3]    ;
     OPT_DATA_TYPE   opt_default_value[2];
-    int*            opt_dest_var[2]    ;
+    int*            opt_dest_var[2]     ;
 
 }SetOptionDefinition_Test_Data;
 
@@ -84,6 +84,10 @@ SetOptionDefinition_Test_Case SetOptionDefinition_Test_Indexes[]=
 
 };
 
+///////////////////////////////////////////////////////////////
+/// @brief Test SetOptionDefinition function. Test cases above.
+/// @return < 0 if any test went wrong, 0 otherwise.
+///////////////////////////////////////////////////////////////
 int Test_SetOptionDefinition()
 {
     int number_of_tests = sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]);
@@ -134,6 +138,12 @@ int Test_SetOptionDefinition()
     return test_overall_result;
 }
 
+///////////////////////////////////////////////////
+/// @brief Test ParseOptions function.
+/// @param argc Argument count.
+/// @param argv Argument vector.
+/// @return < 0 if any error happened, 0 otherwise.
+///////////////////////////////////////////////////
 int TestParseOptions(int argc, char** argv)
 {
     int test_1, test_2, test_3;
