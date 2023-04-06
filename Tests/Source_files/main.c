@@ -11,81 +11,6 @@
 #define TEST_MSG_SUCCEED    "Test %d succeed!\r\n"
 #define TEST_MSG_FAILED     "Test %d failed!\r\n"
 
-/* Flag set by ‘--verbose’. */
-static int verbose_flag;
-
-void ParseDemo(int argc, char** argv)
-{
-      int c;
-
-  while (1)
-    {
-      static struct option long_options[] =
-        {
-          /* These options set a flag. */
-          {"verbose", no_argument,       &verbose_flag, 1},
-          {"brief",   no_argument,       &verbose_flag, 0},
-          /* These options don’t set a flag.
-             We distinguish them by their indices. */
-          {"add",     no_argument,       0, 'a'},
-          {"append",  no_argument,       0, 'b'},
-          {"delete",  required_argument, 0, 'd'},
-          {"create",  required_argument, 0, 'c'},
-          {"file",    required_argument, 0, 'f'},
-          {0, 0, 0, 0}
-        };
-      /* getopt_long stores the option index here. */
-      int option_index = 0;
-
-      c = getopt_long (argc, argv, "abc:d:f:",
-                       long_options, &option_index);
-
-      /* Detect the end of the options. */
-      if (c == -1)
-        break;
-
-      switch (c)
-        {
-        case 0:
-          /* If this option set a flag, do nothing else now. */
-          if (long_options[option_index].flag != 0)
-            break;
-          printf ("option %s", long_options[option_index].name);
-          if (optarg)
-            printf (" with arg %s", optarg);
-          printf ("\n");
-          break;
-
-        case 'a':
-          puts ("option -a\n");
-          break;
-
-        case 'b':
-          puts ("option -b\n");
-          break;
-
-        case 'c':
-          printf ("option -c with value `%s'\n", optarg);
-          break;
-
-        case 'd':
-          printf ("option -d with value `%s'\n", optarg);
-          break;
-
-        case 'f':
-          printf ("option -f with value `%s'\n", optarg);
-          break;
-
-        case '?':
-          /* getopt_long already printed an error message. */
-          break;
-
-        default:
-          abort ();
-        }
-    }
-}
-
 typedef struct
 {
     char            opt_char[16]        ;
@@ -213,39 +138,37 @@ int TestParseOptions(int argc, char** argv)
 {
     int test_1, test_2, test_3;
 
-    SetOptionDefinition('r',
-                        "TestParse1",
-                        "Test option argument parser BOOL.",
-                        GET_OPT_TYPE_INT,
-                        GET_OPT_ARG_REQ_REQUIRED,
-                        (OPT_DATA_TYPE)0,
-                        (OPT_DATA_TYPE)4,
-                        (OPT_DATA_TYPE)3,
-                        &test_1);
+    SetOptionDefinitionFloat(   'r'                                 ,
+                                "TestParse1"                        ,
+                                "Test option argument parser BOOL." ,
+                                0.2                                 ,
+                                4.1                                 ,
+                                3.7                                 ,
+                                &test_1                             );
 
-    SetOptionDefinition('s',
-                        "TestParse2",
-                        "Test option argument parser OPTIONAL OPTION.",
-                        GET_OPT_TYPE_INT,
-                        GET_OPT_ARG_REQ_REQUIRED,
-                        (OPT_DATA_TYPE)0,
-                        (OPT_DATA_TYPE)4,
-                        (OPT_DATA_TYPE)3,
-                        &test_2);
+    SetOptionDefinition('s'                     ,
+                        "TestParse2"            ,
+                        NULL                    ,
+                        GET_OPT_TYPE_INT        ,
+                        GET_OPT_ARG_REQ_OPTIONAL,
+                        (OPT_DATA_TYPE)0        ,
+                        (OPT_DATA_TYPE)4        ,
+                        (OPT_DATA_TYPE)3        ,
+                        &test_2                 );
 
-    SetOptionDefinition('t',
-                        "TestParse3",
-                        "Test option argument parser OPTION.",
-                        GET_OPT_TYPE_INT,
-                        GET_OPT_ARG_REQ_REQUIRED,
-                        (OPT_DATA_TYPE)0,
-                        (OPT_DATA_TYPE)4,
-                        (OPT_DATA_TYPE)3,
-                        &test_3);
+    SetOptionDefinition('t'                                     ,
+                        "TestParse3"                            ,
+                        "Test option argument parser OPTION."   ,
+                        GET_OPT_TYPE_INT                        ,
+                        GET_OPT_ARG_REQ_REQUIRED                ,
+                        (OPT_DATA_TYPE)0                        ,
+                        (OPT_DATA_TYPE)4                        ,
+                        (OPT_DATA_TYPE)3                        ,
+                        &test_3                                 );
 
     int parse_options = ParseOptions(argc, argv);
 
-    if(parse_options < 0)
+    if(parse_options != GET_OPT_ERR_VAL_OUT_OF_BOUNDS)
     {
         return parse_options;
     }
