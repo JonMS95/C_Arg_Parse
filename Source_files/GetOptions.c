@@ -819,8 +819,9 @@ int GenerateShortOptStr(void)
         return GET_OPT_ERR_NULL_PTR;
     }
 
-    char aux_short_options[3 * option_number + 1];
+    char aux_short_options[1 + 3 * option_number + 1];
     memset(aux_short_options, 0, sizeof(aux_short_options));
+    aux_short_options[0] = ':';
 
     for(int i = 0; i < option_number; i++)
     {
