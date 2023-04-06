@@ -161,7 +161,8 @@ int TestParseOptions(int argc, char** argv)
 {
     SeverityLog(SVRTY_LVL_INF, "********** ParseOptions Test Start **********\r\n");
 
-    int test_1, test_2, test_3;
+    float test_1;
+    int test_2, test_3;
 
     SetOptionDefinitionFloat(   'r'                                 ,
                                 "TestParse1"                        ,
@@ -188,10 +189,14 @@ int TestParseOptions(int argc, char** argv)
                         GET_OPT_ARG_REQ_REQUIRED                ,
                         (OPT_DATA_TYPE)0                        ,
                         (OPT_DATA_TYPE)4                        ,
-                        (OPT_DATA_TYPE)3                        ,
+                        (OPT_DATA_TYPE)1                        ,
                         &test_3                                 );
 
     int parse_options = ParseOptions(argc, argv);
+
+    SeverityLog(SVRTY_LVL_INF, "test_1 = %.2f\r\n", test_1);
+    SeverityLog(SVRTY_LVL_INF, "test_1 = %d\r\n", test_2);
+    SeverityLog(SVRTY_LVL_INF, "test_1 = %d\r\n", test_3);
 
     if(parse_options < 0)
     {
