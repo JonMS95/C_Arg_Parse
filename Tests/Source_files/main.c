@@ -90,6 +90,8 @@ SetOptionDefinition_Test_Case SetOptionDefinition_Test_Indexes[]=
 ///////////////////////////////////////////////////////////////
 int Test_SetOptionDefinition()
 {
+    SeverityLog(SVRTY_LVL_INF, "********** SetOptionDefinition Test Start **********\r\n");
+
     int number_of_tests = sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]);
     SeverityLog(SVRTY_LVL_INF, "About to do %d tests.\r\n", number_of_tests);
 
@@ -133,6 +135,17 @@ int Test_SetOptionDefinition()
         SeverityLog(SVRTY_LVL_INF, TEST_MSG_SUCCEED, i);
     }
 
+    if(test_overall_result < 0)
+    {
+        SeverityLog(SVRTY_LVL_WNG, "SetOptionDefinition test failed.\r\n");
+    }
+    else
+    {
+        SeverityLog(SVRTY_LVL_INF, "SetOptionDefinition test succeed!\r\n");
+    }
+
+    SeverityLog(SVRTY_LVL_INF, "********** SetOptionDefinition Test End **********\r\n");
+
     free(test_results);
 
     return test_overall_result;
@@ -146,6 +159,8 @@ int Test_SetOptionDefinition()
 ///////////////////////////////////////////////////
 int TestParseOptions(int argc, char** argv)
 {
+    SeverityLog(SVRTY_LVL_INF, "********** ParseOptions Test Start **********\r\n");
+
     int test_1, test_2, test_3;
 
     SetOptionDefinitionFloat(   'r'                                 ,
@@ -178,26 +193,7 @@ int TestParseOptions(int argc, char** argv)
 
     int parse_options = ParseOptions(argc, argv);
 
-    if(parse_options != GET_OPT_ERR_VAL_OUT_OF_BOUNDS)
-    {
-        return parse_options;
-    }
-
-    return GET_OPT_SUCCESS;
-}
-
-int main(int argc, char **argv)
-{
-    if(Test_SetOptionDefinition() < 0)
-    {
-        SeverityLog(SVRTY_LVL_WNG, "SetOptionDefinition test failed.\r\n");
-    }
-    else
-    {
-        SeverityLog(SVRTY_LVL_INF, "SetOptionDefinition test succeed!\r\n");
-    }
-
-    if(TestParseOptions(argc, argv) < 0)
+    if(parse_options < 0)
     {
         SeverityLog(SVRTY_LVL_WNG, "ParseOptions test failed.\r\n");
     }
@@ -205,6 +201,17 @@ int main(int argc, char **argv)
     {
         SeverityLog(SVRTY_LVL_INF, "ParseOptions test succeed!\r\n");
     }
+
+    SeverityLog(SVRTY_LVL_INF, "********** ParseOptions Test End **********\r\n");
+
+    return (parse_options < 0) ? parse_options : GET_OPT_SUCCESS;
+}
+
+int main(int argc, char **argv)
+{
+    Test_SetOptionDefinition();
+
+    TestParseOptions(argc, argv);
 
     return 0;
 }
