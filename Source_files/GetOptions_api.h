@@ -1,6 +1,10 @@
 #ifndef GET_OPTIONS_API
 #define GET_OPTIONS_API
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /***********************************/
 /******** Define statements ********/
 /***********************************/
@@ -260,5 +264,9 @@ int GetOptDefFromStruct(PUB_OPT_DEFINITION* pub_opt_def, int pub_opt_def_size);
 /// @return < 0 if any error happened, 0 otherwise.
 ////////////////////////////////////////////////////////
 int ParseOptions(int argc, char** argv);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
