@@ -52,7 +52,7 @@ api:
 msg:
 	@echo "**************************************************************************************************"
 	@echo "Don't forget to set the path:"
-	@echo "export LD_LIBRARY_PATH=~/Desktop/scripts/C/C_Get_Options/Dynamic_libraries"
+	@echo "export LD_LIBRARY_PATH=~/Desktop/scripts/C/C_Arg_Parse/Dynamic_libraries"
 	@echo "**************************************************************************************************"
 
 test_deps:
