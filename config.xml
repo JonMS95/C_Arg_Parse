@@ -10,6 +10,7 @@
         </API>
         <Dependency_files>
             <Header_files/>
+            <Dynamic_libraries/>
         </Dependency_files>
         <Tests>
             <Dependency_files>
@@ -37,6 +38,9 @@
     <Dependencies>
         <Header_files
             HeaderPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Header_files/SeverityLog_api.h"
+        />
+        <Dynamic_libraries
+            SOPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Dynamic_libraries/libSeverityLog.so"
         />
     </Dependencies>
     
