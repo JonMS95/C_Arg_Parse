@@ -913,7 +913,7 @@ char* GetOptionsGenFormattedStr(char* string_to_format, int data_type)
 
 void ShowOptions()
 {
-    LOG_INF("*********** Options summary ***********");
+    LOG_INF(GET_OPT_MSG_OPT_SUMMARY_HEADER);
     for(int option_num = 0; option_num < option_number; option_num++)
     {
         char option_summary_msg[GET_OPT_SIZE_DETAIL_MAX + 1];
@@ -953,7 +953,7 @@ void ShowOptions()
             default:
             break;
         }
-        LOG_INF("***************************************");
+        LOG_INF(GET_OPT_MSG_OPT_SUMMARY_FOOTER);
     }
 }
 
