@@ -58,6 +58,12 @@
 #define GET_OPT_MSG_UNKNOWN_OPTION          "Unknown option (%c).\r\n"
 #define GET_OPT_MSG_STRING_NOT_CHAR         "Passed string as argument to an option that requires a character instead: -%c --%s (%s)\r\n."
 #define GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS  "Provided value is out of boundaries for current option: -%c --%s (%s).\r\n"
+#define GET_OPT_MSG_OPT_NAME                "Option:\t%c (%s)"
+#define GET_OPT_MSG_OPT_DESC                "Description: %s"
+#define GET_OPT_MSG_OPT_MIN_VALUE           "Minimum value: %z"
+#define GET_OPT_MSG_OPT_MAX_VALUE           "Maximum value: %z"
+#define GET_OPT_MSG_OPT_DEFAULT_VALUE       "Default value: %z"
+#define GET_OPT_MSG_OPT_ASSIGNED_VALUE      "Assigned value: %z"
 
 /***********************************/
 
@@ -107,6 +113,8 @@ int GenerateShortOptStr(void);
 int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long);
 void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_TYPE* dest);
 void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src);
+char* GetOptionsGenFormattedStr(char* string_to_format, int data_type);
+void ShowOptions(void);
 
 /*************************************/
 
