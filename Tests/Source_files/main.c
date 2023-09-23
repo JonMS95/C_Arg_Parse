@@ -33,7 +33,7 @@ SetOptionDefinition_Test_Data SetOptionDefinition_data =
     .opt_long =             {
                             "xxxxxxxxxx",
                             NULL,
-                            "xxxxxxxxxxx",
+                            "xxxxxxxxxxxxxxxxxxxxxxxx",
                             "Option c",
                             "Option e",
                             "Option f",
@@ -166,7 +166,7 @@ int TestParseOptions(int argc, char** argv)
 
     SetOptionDefinitionFloat(   'r'                                 ,
                                 "TestParse1"                        ,
-                                "Test option argument parser BOOL." ,
+                                "Test option argument parser FLOAT.",
                                 0.2                                 ,
                                 4.1                                 ,
                                 3.7                                 ,
