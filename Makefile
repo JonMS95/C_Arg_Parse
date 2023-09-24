@@ -29,7 +29,7 @@ all: exe test
 
 exe: directories clean deps opt.so api msg
 
-test: directories test_deps test_main.o test_main test_rm_obj test_exe
+test: test_deps test_main.o test_main test_rm_obj test_exe
 
 directories:
 	@./$(shell_dirs)
