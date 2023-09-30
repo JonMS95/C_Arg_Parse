@@ -6,8 +6,8 @@ obj_main	= Tests/Object_files/main.o
 so_opt		= Dynamic_libraries/libGetOptions.so
 exe_main	= Tests/Executable_files/main
 
-shell_dirs		= Shell_files/directories.sh
-shell_sym_links	= Shell_files/sym_links.sh
+shell_dirs		= Common_shell_files/directories.sh
+shell_sym_links	= Common_shell_files/sym_links.sh
 shell_test		= Shell_files/test.sh
 
 p_deps	= config/Dependencies/Header_files
@@ -25,17 +25,23 @@ P_api	= API/Header_files
 s_api	= config/API/Dynamic_libraries
 S_api	= API/Dynamic_libraries
 
+# Retrieve the XML selection
+SH_FILES_PATH := $(shell xmlstarlet sel -t -v "//$$(xmlstarlet el -a "config.xml" | grep "config/Common_shell_files.*@.*PathToShellFiles")" "config.xml")
+
 all: exe test
 
-exe: directories clean deps opt.so api msg
+exe: clean ln_sh_files directories deps opt.so api msg
 
 test: test_deps test_main.o test_main test_rm_obj test_exe
+
+ln_sh_files:
+	ln -sf $(SH_FILES_PATH) Common_shell_files
 
 directories:
 	@./$(shell_dirs)
 
 clean:
-	rm -rf API/Dynamic_libraries/* API/Header_files/*
+	rm -rf Common_shell_files API/Dynamic_libraries/* API/Header_files/*
 
 clean_rm:
 	rm -rf API Dependency_files Dynamic_libraries Tests/Dependency_files Tests/Object_files Tests/Executable_files
