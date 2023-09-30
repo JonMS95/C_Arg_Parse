@@ -5,6 +5,4 @@ Dynamic_libraries
 Executable_files
 Object_files
 Temp
-Shell_files/get_deps.sh
-Shell_files/make_api.sh
-Shell_files/test_deps.sh
+Common_shell_files
