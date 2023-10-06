@@ -63,12 +63,6 @@ opt.so: $(src_get_opt)
 api:
 	@bash $(shell_gen_versions)
 
-msg:
-	@echo "**************************************************************************************************"
-	@echo "Don't forget to set the path:"
-	@echo "export LD_LIBRARY_PATH=~/Desktop/scripts/C/C_Arg_Parse/Dynamic_libraries"
-	@echo "**************************************************************************************************"
-
 # Use this one carefully. Non-tagged versions will be impossible to recover if used.
 clean_api:
 	rm -rf API
