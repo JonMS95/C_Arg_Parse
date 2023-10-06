@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
+    <Project_data
+        version_major="1"
+        version_minor="1"
+        version_mode="DEBUG"
+        URL="https://github.com/JonMS95/C_Arg_Parse"
+        languages="C"
+        type="library"
+    />
     <!-- Directory structure -->
     <!-- Nodes behind describe the whole directory structure of the current project. -->
     <Directories>
         <Dynamic_libraries/>
-        <API>
-            <Header_files/>
-            <Dynamic_libraries/>
-        </API>
+        <API/>
         <Dependency_files>
             <Header_files/>
             <Dynamic_libraries/>
@@ -17,14 +22,17 @@
                 <Dynamic_libraries/>
                 <Header_files/>
             </Dependency_files>
-            <Object_files/>
             <Executable_files/>
         </Tests>
     </Directories>
     
     <!-- Common shell files location -->
     <Common_shell_files
-        PathToShellFiles="/home/jon/Desktop/scripts/C/C_Common_shell_files"
+        version_major="1"
+        version_minor="0"
+        version_mode="DEBUG"
+        local_path="~/Desktop/scripts/C/C_Common_shell_files"
+        URL="https://github.com/JonMS95/C_Common_shell_files"
     />
 
     <!-- API files -->
@@ -40,27 +48,34 @@
     
     <!-- Dependencies -->
     <!-- Paths to dependencies from other projects. -->
-    <Dependencies>
-        <Header_files
-            HeaderPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Header_files/SeverityLog_api.h"
-        />
-        <Dynamic_libraries
-            SOPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Dynamic_libraries/libSeverityLog.so"
+    <Dependencies Dest="Dependency_files">
+        <C_Severity_Log
+            version_major="1"
+            version_minor="0"
+            version_mode="DEBUG"
+            local_path="~/Desktop/scripts/C/C_Severity_Log"
+            URL="https://github.com/JonMS95/C_Severity_Log"
         />
     </Dependencies>
     
     <!-- Tests -->
     <!-- Paths to dependency files for the testing executable. -->
     <Tests>
-        <Dependency_files>
-            <Header_files
-                SeverityLogHeaderPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Header_files/SeverityLog_api.h"
-                GetOptionsHeaderPath="/home/jon/Desktop/scripts/C/C_Arg_Parse/API/Header_files/GetOptions_api.h"
+        <Dependencies Dest="Tests/Dependency_files">
+            <C_Severity_Log
+                version_major="1"
+                version_minor="1"
+                version_mode="DEBUG"
+                local_path="~/Desktop/scripts/C/C_Severity_Log"
+                URL="https://github.com/JonMS95/C_Severity_Log"
             />
-            <Dynamic_libraries
-                SeverityLogSOPath="/home/jon/Desktop/scripts/C/C_Severity_Log/API/Dynamic_libraries/libSeverityLog.so"
-                GetOptionsSOPath="/home/jon/Desktop/scripts/C/C_Arg_Parse/API/Dynamic_libraries/libGetOptions.so"
+            <C_Arg_Parse
+                version_major="1"
+                version_minor="1"
+                version_mode="DEBUG"
+                local_path="~/Desktop/scripts/C/test_versions/C_Arg_Parse"
+                URL="https://github.com/JonMS95/C_Arg_Parse"
             />
-        </Dependency_files>
+        </Dependencies>
     </Tests>
 </config>
