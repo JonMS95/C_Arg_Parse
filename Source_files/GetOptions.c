@@ -2,7 +2,7 @@
 /******** Include statements ********/
 /************************************/
 
-#include "../Dependency_files/Header_files/SeverityLog_api.h"
+#include "SeverityLog_api.h"
 #include "GetOptions.h"
 #include <stdlib.h>
 #include <string.h> // strlen, strcmp
