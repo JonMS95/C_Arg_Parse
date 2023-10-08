@@ -1,15 +1,31 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
-#include "../../Source_files/GetOptions_api.h"
-#include "../../Source_files/GetOptions.h"
-#include "../../Dependency_files/Header_files/SeverityLog_api.h"
+#include "GetOptions_api.h"
+#include "SeverityLog_api.h"
 
 #define TEST_FLG_SUCCESS    0
 #define TEST_FLG_ERROR      -1
 
 #define TEST_MSG_SUCCEED    "Test %d succeed!\r\n"
 #define TEST_MSG_FAILED     "Test %d failed!\r\n"
+
+// Same define statements as in GetOptions.h, so that it is not needed
+// to include a file that does not actually belong to the API
+#define GET_OPT_SUCCESS                     0
+#define GET_OPT_ERR_NO_OPT_CHAR             -1
+#define GET_OPT_ERR_OPT_CHAR_ALREADY_EXISTS -2
+#define GET_OPT_ERR_NO_OPT_LONG             -3
+#define GET_OPT_ERR_LONG_LENGTH_EXCEEDED    -4
+#define GET_OPT_ERR_OPT_LONG_ALREADY_EXISTS -5
+#define GET_OPT_ERR_DETAIL_LENGTH_EXCEEDED  -6
+#define GET_OPT_ERR_UNKNOWN_TYPE            -7
+#define GET_OPT_ERR_UNKNOWN_ARG_REQ         -8
+#define GET_OPT_ERR_WRONG_BOUNDARIES        -9
+#define GET_OPT_ERR_VAL_OUT_OF_BOUNDS       -10
+#define GET_OPT_ERR_NULL_DEST_VAR           -11
+#define GET_OPT_ERR_OPT_NUM_ZERO            -12
+#define GET_OPT_ERR_NULL_PTR                -13
+#define GET_OPT_ERR_NO_ARG_FOUND            -14
+#define GET_OPT_ERR_UNKNOWN_OPTION          -15
 
 typedef struct
 {
