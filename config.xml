@@ -2,7 +2,7 @@
 <config>
     <Project_data
         version_major="1"
-        version_minor="1"
+        version_minor="0"
         version_mode="DEBUG"
         URL="https://github.com/JonMS95/C_Arg_Parse"
         languages="C"
@@ -64,16 +64,16 @@
         <Dependencies Dest="Tests/Dependency_files">
             <C_Severity_Log
                 version_major="1"
-                version_minor="1"
+                version_minor="0"
                 version_mode="DEBUG"
                 local_path="~/Desktop/scripts/C/C_Severity_Log"
                 URL="https://github.com/JonMS95/C_Severity_Log"
             />
             <C_Arg_Parse
                 version_major="1"
-                version_minor="1"
+                version_minor="0"
                 version_mode="DEBUG"
-                local_path="~/Desktop/scripts/C/test_versions/C_Arg_Parse"
+                local_path="~/Desktop/scripts/C/C_Arg_Parse"
                 URL="https://github.com/JonMS95/C_Arg_Parse"
             />
         </Dependencies>
