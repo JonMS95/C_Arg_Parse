@@ -1,6 +1,6 @@
 #####################################################################################################
 # Common variables
-config_file	= config.xml
+config_file	:= config.xml
 
 SH_FILES_PATH := $(shell xmlstarlet sel -t -v "config/Common_shell_files/@local_path" $(config_file))
 PRJ_DATA_NODE := config/Project_data/
@@ -10,16 +10,22 @@ VERSION := v$(VERSION_MAJOR)_$(VERSION_MINOR)
 VERSION_MODE := "$(shell xmlstarlet sel -t -v "$(PRJ_DATA_NODE)@version_mode" $(config_file))"
 
 
-shell_dirs			= Common_shell_files/directories.sh
-shell_sym_links		= Common_shell_files/sym_links.sh
-shell_gen_versions 	= Common_shell_files/gen_version.sh
-shell_test			= Shell_files/test.sh
+shell_dirs			:= Common_shell_files/directories.sh
+shell_sym_links		:= Common_shell_files/sym_links.sh
+shell_gen_versions 	:= Common_shell_files/gen_version.sh
+shell_test			:= Shell_files/test.sh
 
 ifeq ($(VERSION_MODE), "DEBUG")
 	DEBUG_INFO := -g -Wall
 else
 	DEBUG_INFO :=
 endif
+
+HEADER_DEPS_DIR			:= Dependency_files/Header_files
+SO_DEPS_DIR				:= Dependency_files/Dynamic_libraries
+
+TEST_HEADER_DEPS_DIR	:= Tests/$(HEADER_DEPS_DIR)
+TEST_SO_DEPS_DIR		:= Tests/$(SO_DEPS_DIR)
 #####################################################################################################
 
 ################################################
@@ -27,18 +33,15 @@ endif
 src_get_opt	= Source_files/GetOptions.c
 src_main	= Tests/Source_files/main.c
 
-obj_main	= Tests/Object_files/main.o
-
 so_opt		= Dynamic_libraries/libGetOptions.so
 exe_main	= Tests/Executable_files/main
 
-c_test_deps	= $(config_file)
 d_test_deps	= config/Tests/Dependencies/
 ################################################
 
 #####################################################################
 # Compound rules
-exe: clean ln_sh_files directories deps opt.so api msg
+exe: clean ln_sh_files directories deps opt.so api
 
 test: clean_test directories test_deps test_main test_rm_obj test_exe
 #####################################################################
@@ -58,7 +61,7 @@ deps:
 	@bash $(shell_sym_links)
 
 opt.so: $(src_get_opt)
-	gcc $(DEBUG_INFO) -fPIC -shared $(src_get_opt) -o $(so_opt)
+	gcc $(DEBUG_INFO) -I$(HEADER_DEPS_DIR) -fPIC -shared $(src_get_opt) -o $(so_opt)
 
 api:
 	@bash $(shell_gen_versions)
@@ -74,10 +77,10 @@ clean_test:
 	rm -rf Tests/Dependency_files Tests/Object_files Tests/Executable_files
 
 test_deps:
-	@bash $(shell_sym_links) -c $(c_test_deps) -d $(d_test_deps)
+	@bash $(shell_sym_links) -d $(d_test_deps)
 
 test_main:
-	gcc $(DEBUG_INFO) $(src_main) -LTests/Dependency_files/Dynamic_libraries -lGetOptions -lSeverityLog -o $(exe_main)
+	gcc $(DEBUG_INFO) -I$(TEST_HEADER_DEPS_DIR) $(src_main) -L$(TEST_SO_DEPS_DIR) -lGetOptions -lSeverityLog -o $(exe_main)
 
 test_rm_obj:
 	rm -rf Tests/Object_files
