@@ -34,17 +34,6 @@
         local_path="~/Desktop/scripts/C/C_Common_shell_files"
         URL="https://github.com/JonMS95/C_Common_shell_files"
     />
-
-    <!-- API files -->
-    <!-- Shows where the API files for the current project should be found. -->
-    <API>
-        <Header_files
-            HeaderPath="Source_files/GetOptions_api.h"
-        />
-        <Dynamic_libraries
-            SOPath="Dynamic_libraries/libGetOptions.so"
-        />
-    </API>
     
     <!-- Dependencies -->
     <!-- Paths to dependencies from other projects. -->
