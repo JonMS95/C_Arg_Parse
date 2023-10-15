@@ -3,13 +3,13 @@
     <Project_data
         version_major="1"
         version_minor="0"
-        version_mode="DEBUG"
+        version_mode="RELEASE"
         URL="https://github.com/JonMS95/C_Arg_Parse"
-        languages="C"
         type="library"
+        language="C"
+        library_name="GetOptions"
     />
     <!-- Directory structure -->
-    <!-- Nodes behind describe the whole directory structure of the current project. -->
     <Directories>
         <Dynamic_libraries/>
         <API/>
@@ -30,7 +30,7 @@
     <Common_shell_files
         version_major="1"
         version_minor="0"
-        version_mode="DEBUG"
+        version_mode="RELEASE"
         local_path="~/Desktop/scripts/C/C_Common_shell_files"
         URL="https://github.com/JonMS95/C_Common_shell_files"
     />
@@ -41,7 +41,7 @@
         <C_Severity_Log
             version_major="1"
             version_minor="0"
-            version_mode="DEBUG"
+            version_mode="RELEASE"
             local_path="~/Desktop/scripts/C/C_Severity_Log"
             URL="https://github.com/JonMS95/C_Severity_Log"
         />
@@ -54,14 +54,14 @@
             <C_Severity_Log
                 version_major="1"
                 version_minor="0"
-                version_mode="DEBUG"
+                version_mode="RELEASE"
                 local_path="~/Desktop/scripts/C/C_Severity_Log"
                 URL="https://github.com/JonMS95/C_Severity_Log"
             />
             <C_Arg_Parse
                 version_major="1"
                 version_minor="0"
-                version_mode="DEBUG"
+                version_mode="RELEASE"
                 local_path="~/Desktop/scripts/C/C_Arg_Parse"
                 URL="https://github.com/JonMS95/C_Arg_Parse"
             />
