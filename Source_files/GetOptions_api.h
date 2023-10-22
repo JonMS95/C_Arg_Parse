@@ -114,21 +114,21 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionBool(opt_char            ,   \
-                                opt_long            ,   \
-                                opt_detail          ,   \
-                                opt_default_value   ,   \
-                                opt_dest_var        )   \
-                                                        \
-        SetOptionDefinition(opt_char                ,   \
-                            opt_long                ,   \
-                            opt_detail              ,   \
-                            GET_OPT_TYPE_INT        ,   \
-                            GET_OPT_ARG_REQ_NO      ,   \
-                            (OPT_DATA_TYPE)0        ,   \
-                            (OPT_DATA_TYPE)1        ,   \
-                            opt_default_value       ,   \
-                            opt_dest_var            )   
+#define SetOptionDefinitionBool(opt_char                        ,   \
+                                opt_long                        ,   \
+                                opt_detail                      ,   \
+                                opt_default_value               ,   \
+                                opt_dest_var                    )   \
+                                                                    \
+        SetOptionDefinition(opt_char                            ,   \
+                            opt_long                            ,   \
+                            opt_detail                          ,   \
+                            GET_OPT_TYPE_INT                    ,   \
+                            GET_OPT_ARG_REQ_NO                  ,   \
+                            (OPT_DATA_TYPE)0                    ,   \
+                            (OPT_DATA_TYPE)1                    ,   \
+                            (OPT_DATA_TYPE)opt_default_value    ,   \
+                            opt_dest_var                        )   
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set integer option definition.
