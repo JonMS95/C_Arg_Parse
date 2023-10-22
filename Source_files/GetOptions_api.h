@@ -5,6 +5,15 @@
 extern "C" {
 #endif
 
+/************************************/
+/******** Include statements ********/
+/************************************/
+
+#include <limits.h> // INT_MIN, INT_MAX, CHAR_MIN, CHAR_MAX
+#include <float.h>  // FLT_MIN, FLT_MAX, DBL_MIN, DBL_MAX
+
+/************************************/
+
 /***********************************/
 /******** Private constants ********/
 /***********************************/

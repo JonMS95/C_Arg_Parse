@@ -6,8 +6,6 @@
 #include "GetOptions.h"
 #include <stdlib.h>
 #include <string.h> // strlen, strcmp
-#include <limits.h> // INT_MIN, INT_MAX, CHAR_MIN, CHAR_MAX
-#include <float.h>  // FLT_MIN, FLT_MAX, DBL_MIN, DBL_MAX
 
 
 /************************************/
