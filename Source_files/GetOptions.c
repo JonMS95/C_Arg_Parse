@@ -670,6 +670,13 @@ void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
     {
         case GET_OPT_TYPE_INT:
         {
+            // If no argument is required with an integer data type option, then it should be a boolean type option.
+            if(priv_opt_def->pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_NO)
+            {
+                *(bool*)(priv_opt_def->pub_opt.opt_dest_var) = (src.integer == 0 ? false : true);
+                break;
+            }
+
             *(int*)(priv_opt_def->pub_opt.opt_dest_var) = src.integer;
         }
         break;
@@ -786,7 +793,7 @@ int ParseOptions(int argc, char** argv)
                 // Check if the option is boolean.
                 if(private_options[current_option_index].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_NO)
                 {
-                    *((bool*)(private_options[current_option_index].pub_opt.opt_dest_var)) = (bool)atoi(optarg);
+                    *((bool*)(private_options[current_option_index].pub_opt.opt_dest_var)) = true;
                     private_options[current_option_index].opt_has_value = true;
                     // Go to next option.
                     break;
@@ -933,7 +940,16 @@ void ShowOptions()
         switch(private_options[option_num].pub_opt.opt_var_type)
         {
             case GET_OPT_TYPE_INT:
-                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), *((int*)(private_options[option_num].pub_opt.opt_dest_var)));
+            {
+                if(private_options[option_num].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_NO)
+                {
+                    LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), *((bool*)(private_options[option_num].pub_opt.opt_dest_var)));
+                }
+                else
+                {
+                    LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), *((int*)(private_options[option_num].pub_opt.opt_dest_var)));
+                }
+            }
             break;
 
             case GET_OPT_TYPE_CHAR:
