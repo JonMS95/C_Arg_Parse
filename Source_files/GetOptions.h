@@ -60,12 +60,13 @@
 #define GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS  "Provided value is out of boundaries for current option: -%c --%s (%s).\r\n"
 #define GET_OPT_MSG_OPT_SUMMARY_HEADER      "*********** Options summary ***********"
 #define GET_OPT_MSG_OPT_SUMMARY_FOOTER      "***************************************"
-#define GET_OPT_MSG_OPT_NAME                "Option:\t\t%c (%s)"
-#define GET_OPT_MSG_OPT_DESC                "Description:\t%s"
-#define GET_OPT_MSG_OPT_MIN_VALUE           "Minimum value:\t%z"
-#define GET_OPT_MSG_OPT_MAX_VALUE           "Maximum value:\t%z"
-#define GET_OPT_MSG_OPT_DEFAULT_VALUE       "Default value:\t%z"
-#define GET_OPT_MSG_OPT_ASSIGNED_VALUE      "Assigned value:\t%z"
+#define GET_OPT_MSG_OPT_NAME                "Option: %*s%c"
+#define GET_OPT_MSG_OPT_NAME_LONG           "Option long: %*s%s"
+#define GET_OPT_MSG_OPT_DESC                "Description: %*s%s"
+#define GET_OPT_MSG_OPT_MIN_VALUE           "Minimum value: %*s%z"
+#define GET_OPT_MSG_OPT_MAX_VALUE           "Maximum value: %*s%z"
+#define GET_OPT_MSG_OPT_DEFAULT_VALUE       "Default value: %*s%z"
+#define GET_OPT_MSG_OPT_ASSIGNED_VALUE      "Assigned value: %*s%z"
 
 /***********************************/
 
