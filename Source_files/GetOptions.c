@@ -924,29 +924,32 @@ void ShowOptions()
         char option_summary_msg[GET_OPT_SIZE_DETAIL_MAX + 1];
 
         int blank_spaces = 0;
+        // Length of longest string among the ones that are meant to inform about the option's values.
+        int longest_opt_info_len = strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE);
 
-        blank_spaces = (int)(strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE) - strlen(GET_OPT_MSG_OPT_NAME));
-        LOG_INF(GET_OPT_MSG_OPT_NAME, blank_spaces, "", private_options[option_num].pub_opt.opt_char);
+        // Before printing any option information, the number of leading blank spaces for each one should be calculated first.
+        blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_NAME);
+        LOG_INF(GET_OPT_MSG_OPT_NAME, blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_char);
 
-        blank_spaces = (int)(strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE) - strlen(GET_OPT_MSG_OPT_NAME_LONG));
-        LOG_INF(GET_OPT_MSG_OPT_NAME_LONG, blank_spaces, "", private_options[option_num].pub_opt.opt_long);
+        blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_NAME_LONG);
+        LOG_INF(GET_OPT_MSG_OPT_NAME_LONG, blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_long);
         
-        blank_spaces = (int)(strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE) - strlen(GET_OPT_MSG_OPT_DESC));
-        LOG_INF(GET_OPT_MSG_OPT_DESC, blank_spaces, "", private_options[option_num].pub_opt.opt_detail);
+        blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_DESC);
+        LOG_INF(GET_OPT_MSG_OPT_DESC, blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_detail);
         
-        blank_spaces = (int)(strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE) - strlen(GET_OPT_MSG_OPT_MIN_VALUE));
+        blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_MIN_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_MIN_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", private_options[option_num].pub_opt.opt_min_value);
+        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_min_value);
         
-        blank_spaces = (int)(strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE) - strlen(GET_OPT_MSG_OPT_MAX_VALUE));
+        blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_MAX_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_MAX_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", private_options[option_num].pub_opt.opt_max_value);
+        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_max_value);
         
-        blank_spaces = (int)(strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE) - strlen(GET_OPT_MSG_OPT_DEFAULT_VALUE));
+        blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_DEFAULT_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_DEFAULT_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", private_options[option_num].pub_opt.opt_default_value);
+        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_default_value);
 
-        blank_spaces = (int)(strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE) - strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE));
+        blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_ASSIGNED_VALUE);
         switch(private_options[option_num].pub_opt.opt_var_type)
         {
@@ -954,25 +957,25 @@ void ShowOptions()
             {
                 if(private_options[option_num].pub_opt.opt_needs_arg == GET_OPT_ARG_REQ_NO)
                 {
-                    LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", *((bool*)(private_options[option_num].pub_opt.opt_dest_var)));
+                    LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, *((bool*)(private_options[option_num].pub_opt.opt_dest_var)));
                 }
                 else
                 {
-                    LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", *((int*)(private_options[option_num].pub_opt.opt_dest_var)));
+                    LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, *((int*)(private_options[option_num].pub_opt.opt_dest_var)));
                 }
             }
             break;
 
             case GET_OPT_TYPE_CHAR:
-                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", *((char*)(private_options[option_num].pub_opt.opt_dest_var)));
+                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, *((char*)(private_options[option_num].pub_opt.opt_dest_var)));
             break;
 
             case GET_OPT_TYPE_FLOAT:
-                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", *((float*)(private_options[option_num].pub_opt.opt_dest_var)));
+                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, *((float*)(private_options[option_num].pub_opt.opt_dest_var)));
             break;
 
             case GET_OPT_TYPE_DOUBLE:
-                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, "", *((double*)(private_options[option_num].pub_opt.opt_dest_var)));
+                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, *((double*)(private_options[option_num].pub_opt.opt_dest_var)));
             break;
             
             default:
