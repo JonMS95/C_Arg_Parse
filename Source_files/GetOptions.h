@@ -67,6 +67,7 @@
 #define GET_OPT_MSG_OPT_MAX_VALUE           "Maximum value: %*s%z"
 #define GET_OPT_MSG_OPT_DEFAULT_VALUE       "Default value: %*s%z"
 #define GET_OPT_MSG_OPT_ASSIGNED_VALUE      "Assigned value: %*s%z"
+#define GET_OPT_MSG_OPT_VAL_SEPARATOR       ""
 
 /***********************************/
 
