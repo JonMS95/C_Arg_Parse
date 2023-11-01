@@ -208,6 +208,8 @@ int TestParseOptions(int argc, char** argv)
                         (OPT_DATA_TYPE)1                        ,
                         &test_3                                 );
 
+    SetSeverityLogPrintTimeStatus(true);
+
     int parse_options = ParseOptions(argc, argv);
 
     SeverityLog(SVRTY_LVL_INF, "test_1 = %.2f\r\n", test_1);
