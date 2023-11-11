@@ -67,7 +67,7 @@ SetOptionDefinition_Test_Data SetOptionDefinition_data =
                                 NULL,
                                 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                             },
-    .opt_var_type =         {0, -1, 4   },
+    .opt_var_type =         {0, -1, 5   },
     .opt_needs_arg =        {1, -1, 3, 0},
     .opt_min_value =        {0, 2       },
     .opt_max_value =        {2, 0       },
@@ -179,6 +179,7 @@ int TestParseOptions(int argc, char** argv)
 
     float test_1;
     int test_2, test_3;
+    char* test_4 = calloc(4, 1);
 
     SetOptionDefinitionFloat(   'r'                                 ,
                                 "TestParse1"                        ,
@@ -208,13 +209,24 @@ int TestParseOptions(int argc, char** argv)
                         (OPT_DATA_TYPE)1                        ,
                         &test_3                                 );
 
+    SetOptionDefinition('c'                                     ,
+                        "TestParse4"                            ,
+                        "Test character option."                ,
+                        GET_OPT_TYPE_CHAR_STRING                ,
+                        GET_OPT_ARG_REQ_REQUIRED                ,
+                        (OPT_DATA_TYPE)"aaa"                    ,
+                        (OPT_DATA_TYPE)"zzz"                    ,
+                        (OPT_DATA_TYPE)"bbb"                    ,
+                        &test_4                                 );
+
     SetSeverityLogPrintTimeStatus(true);
 
     int parse_options = ParseOptions(argc, argv);
 
-    SeverityLog(SVRTY_LVL_INF, "test_1 = %.2f\r\n", test_1);
-    SeverityLog(SVRTY_LVL_INF, "test_1 = %d\r\n", test_2);
-    SeverityLog(SVRTY_LVL_INF, "test_1 = %d\r\n", test_3);
+    SeverityLog(SVRTY_LVL_INF, "test_1 = %.2f", test_1);
+    SeverityLog(SVRTY_LVL_INF, "test_2 = %d", test_2);
+    SeverityLog(SVRTY_LVL_INF, "test_3 = %d", test_3);
+    SeverityLog(SVRTY_LVL_INF, "test_4 = %s", test_4);
 
     if(parse_options < 0)
     {
