@@ -161,9 +161,7 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             int maximum = max.integer;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
         }
         break;
 
@@ -173,9 +171,7 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             char maximum = max.character;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
         }
         break;
 
@@ -185,9 +181,7 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             float maximum = max.floating;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
         }
         break;
 
@@ -197,9 +191,17 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             double maximum = max.doubling;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            char* minimum = min.char_string;
+            char* maximum = max.char_string;
+            
+            if(strcmp(minimum, maximum) > 0)
+                return GET_OPT_ERR_WRONG_BOUNDARIES;
         }
         break;
         
@@ -654,6 +656,12 @@ void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_T
         }
         break;
 
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            dest->char_string = arg;
+        }
+        break;
+
         default:
         break;
     }
@@ -696,6 +704,12 @@ void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
         case GET_OPT_TYPE_DOUBLE:
         {
             *(double*)(priv_opt_def->pub_opt.opt_dest_var) = src.doubling;
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            strcpy(*(char**)(priv_opt_def->pub_opt.opt_dest_var), src.char_string);
         }
         break;
 
@@ -779,6 +793,12 @@ int ParseOptions(int argc, char** argv)
 
             default:
             {
+                if(optarg != NULL)
+                {
+                    LOG_DBG("optarg = <%s>", optarg);
+                    LOG_DBG("strlen(optarg) = <%d>", strlen(optarg));
+                }
+
                 // First of all, get the index of the current option within the private option structure array.
 
                 int current_option_index;
@@ -889,6 +909,12 @@ char* GetOptionsGenFormattedStr(char* string_to_format, int data_type)
         }
         break;
         
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            target_formatter = 's';
+        }
+        break;
+
         default:
         {
             SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_UNKNOWN_TYPE);
@@ -976,6 +1002,10 @@ void ShowOptions()
 
             case GET_OPT_TYPE_DOUBLE:
                 LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, *((double*)(private_options[option_num].pub_opt.opt_dest_var)));
+            break;
+
+            case GET_OPT_TYPE_CHAR_STRING:
+                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, (*(char**)(private_options[option_num].pub_opt.opt_dest_var)));
             break;
             
             default:
