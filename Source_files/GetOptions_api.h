@@ -20,8 +20,9 @@ extern "C" {
 
 /******** Field sizes ********/
 
-#define GET_OPT_SIZE_LONG_MAX   20
-#define GET_OPT_SIZE_DETAIL_MAX 50
+#define GET_OPT_SIZE_LONG_MAX           20
+#define GET_OPT_SIZE_DETAIL_MAX         50
+#define GET_OPT_SIZE_CHAR_STRING_MAX    100
 
 /*****************************/
 
@@ -31,12 +32,13 @@ extern "C" {
 
 typedef enum
 {
-    GET_OPT_TYPE_MIN    = 0,
-    GET_OPT_TYPE_INT    = 0,
-    GET_OPT_TYPE_CHAR   = 1,
-    GET_OPT_TYPE_FLOAT  = 2,
-    GET_OPT_TYPE_DOUBLE = 3,
-    GET_OPT_TYPE_MAX    = 3,
+    GET_OPT_TYPE_MIN            = 0,
+    GET_OPT_TYPE_INT            = 0,
+    GET_OPT_TYPE_CHAR           = 1,
+    GET_OPT_TYPE_FLOAT          = 2,
+    GET_OPT_TYPE_DOUBLE         = 3,
+    GET_OPT_TYPE_CHAR_STRING    = 4,
+    GET_OPT_TYPE_MAX            = 4,
 
 } OPT_DATA_SUPPORTED_TYPES;
 
@@ -56,6 +58,7 @@ typedef union
     char    character;
     float   floating;
     double  doubling;
+    char*   char_string;
 
 } OPT_DATA_TYPE;
 
