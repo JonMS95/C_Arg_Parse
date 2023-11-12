@@ -117,21 +117,21 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionBool(opt_char                        ,   \
-                                opt_long                        ,   \
-                                opt_detail                      ,   \
-                                opt_default_value               ,   \
-                                opt_dest_var                    )   \
-                                                                    \
-        SetOptionDefinition(opt_char                            ,   \
-                            opt_long                            ,   \
-                            opt_detail                          ,   \
-                            GET_OPT_TYPE_INT                    ,   \
-                            GET_OPT_ARG_REQ_NO                  ,   \
-                            (OPT_DATA_TYPE)0                    ,   \
-                            (OPT_DATA_TYPE)1                    ,   \
-                            (OPT_DATA_TYPE)opt_default_value    ,   \
-                            opt_dest_var                        )   
+#define SetOptionDefinitionBool(opt_char            ,                           \
+                                opt_long            ,                           \
+                                opt_detail          ,                           \
+                                opt_default_value   ,                           \
+                                opt_dest_var        )                           \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_INT                                ,   \
+                            GET_OPT_ARG_REQ_NO                              ,   \
+                            (OPT_DATA_TYPE){.integer = 0}                   ,   \
+                            (OPT_DATA_TYPE){.integer = 1}                   ,   \
+                            (OPT_DATA_TYPE){.integer = opt_default_value}   ,   \
+                            opt_dest_var                                    )   
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set integer option definition.
@@ -144,23 +144,23 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionInt( opt_char            ,               \
-                                opt_long            ,               \
-                                opt_detail          ,               \
-                                opt_min_value       ,               \
-                                opt_max_value       ,               \
-                                opt_default_value   ,               \
-                                opt_dest_var        )               \
-                                                                    \
-        SetOptionDefinition(    opt_char                        ,   \
-                                opt_long                        ,   \
-                                opt_detail                      ,   \
-                                GET_OPT_TYPE_INT                ,   \
-                                GET_OPT_ARG_REQ_REQUIRED        ,   \
-                                (OPT_DATA_TYPE)opt_min_value    ,   \
-                                (OPT_DATA_TYPE)opt_max_value    ,   \
-                                (OPT_DATA_TYPE)opt_default_value,   \
-                                opt_dest_var                    )   
+#define SetOptionDefinitionInt( opt_char            ,                               \
+                                opt_long            ,                               \
+                                opt_detail          ,                               \
+                                opt_min_value       ,                               \
+                                opt_max_value       ,                               \
+                                opt_default_value   ,                               \
+                                opt_dest_var        )                               \
+                                                                                    \
+        SetOptionDefinition(    opt_char                                        ,   \
+                                opt_long                                        ,   \
+                                opt_detail                                      ,   \
+                                GET_OPT_TYPE_INT                                ,   \
+                                GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                                (OPT_DATA_TYPE){.integer = opt_min_value}       ,   \
+                                (OPT_DATA_TYPE){.integer = opt_max_value}       ,   \
+                                (OPT_DATA_TYPE){.integer = opt_default_value}   ,   \
+                                opt_dest_var                                    )   
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set integer option definition without boundaries.
@@ -171,21 +171,21 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionIntNL(   opt_char                ,   \
-                                    opt_long                ,   \
-                                    opt_detail              ,   \
-                                    opt_default_value       ,   \
-                                    opt_dest_var            )   \
-                                                                \
-        SetOptionDefinition(opt_char                        ,   \
-                            opt_long                        ,   \
-                            opt_detail                      ,   \
-                            GET_OPT_TYPE_INT                ,   \
-                            GET_OPT_ARG_REQ_REQUIRED        ,   \
-                            (OPT_DATA_TYPE)INT_MIN          ,   \
-                            (OPT_DATA_TYPE)INT_MAX          ,   \
-                            (OPT_DATA_TYPE)opt_default_value,   \
-                            opt_dest_var                    )
+#define SetOptionDefinitionIntNL(   opt_char                ,                   \
+                                    opt_long                ,                   \
+                                    opt_detail              ,                   \
+                                    opt_default_value       ,                   \
+                                    opt_dest_var            )                   \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_INT                                ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                            (OPT_DATA_TYPE){.integer = INT_MIN}             ,   \
+                            (OPT_DATA_TYPE){.integer = INT_MAX}             ,   \
+                            (OPT_DATA_TYPE){.integer = opt_default_value}   ,   \
+                            opt_dest_var                                    )
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set char option definition.
@@ -198,23 +198,23 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionChar(opt_char                    ,   \
-                                opt_long                    ,   \
-                                opt_detail                  ,   \
-                                opt_min_value               ,   \
-                                opt_max_value               ,   \
-                                opt_default_value           ,   \
-                                opt_dest_var                )   \
-                                                                \
-        SetOptionDefinition(opt_char                        ,   \
-                            opt_long                        ,   \
-                            opt_detail                      ,   \
-                            GET_OPT_TYPE_CHAR               ,   \
-                            GET_OPT_ARG_REQ_REQUIRED        ,   \
-                            (OPT_DATA_TYPE)opt_min_value    ,   \
-                            (OPT_DATA_TYPE)opt_max_value    ,   \
-                            (OPT_DATA_TYPE)opt_default_value,   \
-                            opt_dest_var                    )   
+#define SetOptionDefinitionChar(opt_char                    ,                   \
+                                opt_long                    ,                   \
+                                opt_detail                  ,                   \
+                                opt_min_value               ,                   \
+                                opt_max_value               ,                   \
+                                opt_default_value           ,                   \
+                                opt_dest_var                )                   \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_CHAR                               ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                            (OPT_DATA_TYPE){.character = opt_min_value}     ,   \
+                            (OPT_DATA_TYPE){.character = opt_max_value}     ,   \
+                            (OPT_DATA_TYPE){.character = opt_default_value} ,   \
+                            opt_dest_var                                    )   
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -226,21 +226,21 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionCharNL(  opt_char                ,   \
-                                    opt_long                ,   \
-                                    opt_detail              ,   \
-                                    opt_default_value       ,   \
-                                    opt_dest_var            )   \
-                                                                \
-        SetOptionDefinition(opt_char                        ,   \
-                            opt_long                        ,   \
-                            opt_detail                      ,   \
-                            GET_OPT_TYPE_CHAR               ,   \
-                            GET_OPT_ARG_REQ_REQUIRED        ,   \
-                            (OPT_DATA_TYPE)CHAR_MIN         ,   \
-                            (OPT_DATA_TYPE)CHAR_MAX         ,   \
-                            (OPT_DATA_TYPE)opt_default_value,   \
-                            opt_dest_var                    )
+#define SetOptionDefinitionCharNL(  opt_char                ,                   \
+                                    opt_long                ,                   \
+                                    opt_detail              ,                   \
+                                    opt_default_value       ,                   \
+                                    opt_dest_var            )                   \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_CHAR                               ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                            (OPT_DATA_TYPE){.character = CHAR_MIN}          ,   \
+                            (OPT_DATA_TYPE){.character = CHAR_MAX}          ,   \
+                            (OPT_DATA_TYPE){.character = opt_default_value} ,   \
+                            opt_dest_var                                    )
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set float option definition.
@@ -253,23 +253,23 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionFloat(   opt_char                ,   \
-                                    opt_long                ,   \
-                                    opt_detail              ,   \
-                                    opt_min_value           ,   \
-                                    opt_max_value           ,   \
-                                    opt_default_value       ,   \
-                                    opt_dest_var            )   \
-                                                                \
-        SetOptionDefinition(opt_char                        ,   \
-                            opt_long                        ,   \
-                            opt_detail                      ,   \
-                            GET_OPT_TYPE_FLOAT              ,   \
-                            GET_OPT_ARG_REQ_REQUIRED        ,   \
-                            (OPT_DATA_TYPE)opt_min_value    ,   \
-                            (OPT_DATA_TYPE)opt_max_value    ,   \
-                            (OPT_DATA_TYPE)opt_default_value,   \
-                            opt_dest_var                    )
+#define SetOptionDefinitionFloat(   opt_char                                ,   \
+                                    opt_long                                ,   \
+                                    opt_detail                              ,   \
+                                    opt_min_value                           ,   \
+                                    opt_max_value                           ,   \
+                                    opt_default_value                       ,   \
+                                    opt_dest_var                            )   \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_FLOAT                              ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                            (OPT_DATA_TYPE){.floating = opt_min_value}      ,   \
+                            (OPT_DATA_TYPE){.floating = opt_max_value}      ,   \
+                            (OPT_DATA_TYPE){.floating = opt_default_value}  ,   \
+                            opt_dest_var                                    )
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set float option definition without boundaries.
@@ -280,21 +280,21 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionFloatNL( opt_char            ,   \
-                                    opt_long            ,   \
-                                    opt_detail          ,   \
-                                    opt_default_value   ,   \
-                                    opt_dest_var        )   \
-                                                            \
-SetOptionDefinition(opt_char                            ,   \
-                    opt_long                            ,   \
-                    opt_detail                          ,   \
-                    GET_OPT_TYPE_FLOAT                  ,   \
-                    GET_OPT_ARG_REQ_REQUIRED            ,   \
-                    (OPT_DATA_TYPE)FLT_MIN              ,   \
-                    (OPT_DATA_TYPE)FLT_MAX              ,   \
-                    (OPT_DATA_TYPE)opt_default_value    ,   \
-                    opt_dest_var                        )
+#define SetOptionDefinitionFloatNL( opt_char            ,               \
+                                    opt_long            ,               \
+                                    opt_detail          ,               \
+                                    opt_default_value   ,               \
+                                    opt_dest_var        )               \
+                                                                        \
+SetOptionDefinition(opt_char                                        ,   \
+                    opt_long                                        ,   \
+                    opt_detail                                      ,   \
+                    GET_OPT_TYPE_FLOAT                              ,   \
+                    GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                    (OPT_DATA_TYPE){.floating = FLT_MIN}            ,   \
+                    (OPT_DATA_TYPE){.floating = FLT_MAX}            ,   \
+                    (OPT_DATA_TYPE){.floating = opt_default_value}  ,   \
+                    opt_dest_var                                    )
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set double option definition.
@@ -307,23 +307,23 @@ SetOptionDefinition(opt_char                            ,   \
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionDouble(  opt_char                ,   \
-                                    opt_long                ,   \
-                                    opt_detail              ,   \
-                                    opt_min_value           ,   \
-                                    opt_max_value           ,   \
-                                    opt_default_value       ,   \
-                                    opt_dest_var            )   \
-                                                                \
-        SetOptionDefinition(opt_char                        ,   \
-                            opt_long                        ,   \
-                            opt_detail                      ,   \
-                            GET_OPT_TYPE_DOUBLE             ,   \
-                            GET_OPT_ARG_REQ_REQUIRED        ,   \
-                            (OPT_DATA_TYPE)opt_min_value    ,   \
-                            (OPT_DATA_TYPE)opt_max_value    ,   \
-                            (OPT_DATA_TYPE)opt_default_value,   \
-                            opt_dest_var                    )
+#define SetOptionDefinitionDouble(  opt_char                ,                   \
+                                    opt_long                ,                   \
+                                    opt_detail              ,                   \
+                                    opt_min_value           ,                   \
+                                    opt_max_value           ,                   \
+                                    opt_default_value       ,                   \
+                                    opt_dest_var            )                   \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_DOUBLE                             ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                            (OPT_DATA_TYPE){.doubling = opt_min_value}      ,   \
+                            (OPT_DATA_TYPE){.doubling = opt_max_value}      ,   \
+                            (OPT_DATA_TYPE){.doubling = opt_default_value}  ,   \
+                            opt_dest_var                                    )
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set double option definition without boundaries.
@@ -334,23 +334,65 @@ SetOptionDefinition(opt_char                            ,   \
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionDoubleNL(opt_char                ,   \
-                                    opt_long                ,   \
-                                    opt_detail              ,   \
-                                    opt_default_value       ,   \
-                                    opt_dest_var            )   \
-                                                                \
-        SetOptionDefinition(opt_char                        ,   \
-                            opt_long                        ,   \
-                            opt_detail                      ,   \
-                            GET_OPT_TYPE_DOUBLE             ,   \
-                            GET_OPT_ARG_REQ_REQUIRED        ,   \
-                            (OPT_DATA_TYPE)DBL_MIN          ,   \
-                            (OPT_DATA_TYPE)DBL_MAX          ,   \
-                            (OPT_DATA_TYPE)opt_default_value,   \
-                            opt_dest_var                    )
+#define SetOptionDefinitionDoubleNL(opt_char                ,                   \
+                                    opt_long                ,                   \
+                                    opt_detail              ,                   \
+                                    opt_default_value       ,                   \
+                                    opt_dest_var            )                   \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_DOUBLE                             ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                            (OPT_DATA_TYPE){.doubling = DBL_MIN}            ,   \
+                            (OPT_DATA_TYPE){.doubling = DBL_MAX}            ,   \
+                            (OPT_DATA_TYPE){.doubling = opt_default_value}  ,   \
+                            opt_dest_var                                    )
 
-/*************************************/
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set double option definition.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_min_value Option minimum value.
+/// @param opt_max_value Option maximum value.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+#define SetOptionDefinitionString(  opt_char                ,                       \
+                                    opt_long                ,                       \
+                                    opt_detail              ,                       \
+                                    opt_min_value           ,                       \
+                                    opt_max_value           ,                       \
+                                    opt_default_value       ,                       \
+                                    opt_dest_var            )                       \
+                                                                                    \
+        SetOptionDefinition(opt_char                                            ,   \
+                            opt_long                                            ,   \
+                            opt_detail                                          ,   \
+                            GET_OPT_TYPE_CHAR_STRING                            ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                            ,   \
+                            (OPT_DATA_TYPE){.char_string = opt_min_value}       ,   \
+                            (OPT_DATA_TYPE){.char_string = opt_max_value}       ,   \
+                            (OPT_DATA_TYPE){.char_string = opt_default_value}   ,   \
+                            opt_dest_var                                        )
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set double option definition without boundaries.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionStringNL(char opt_char                ,
+                                char* opt_long                ,
+                                char* opt_detail              ,
+                                char* opt_default_value       ,
+                                void* opt_dest_var            );
 
 ///////////////////////////////////////////////////////////////////////////
 /// @brief Set multiple option definition taking a struct array as input. 
@@ -367,6 +409,8 @@ int GetOptDefFromStruct(PUB_OPT_DEFINITION* pub_opt_def, int pub_opt_def_size);
 /// @return < 0 if any error happened, 0 otherwise.
 ////////////////////////////////////////////////////////
 int ParseOptions(int argc, char** argv);
+
+/*************************************/
 
 #ifdef __cplusplus
 }
