@@ -793,14 +793,7 @@ int ParseOptions(int argc, char** argv)
 
             default:
             {
-                if(optarg != NULL)
-                {
-                    LOG_DBG("optarg = <%s>", optarg);
-                    LOG_DBG("strlen(optarg) = <%d>", strlen(optarg));
-                }
-
                 // First of all, get the index of the current option within the private option structure array.
-
                 int current_option_index;
                 for(current_option_index = 0; current_option_index < option_number; current_option_index++)
                 {
@@ -860,13 +853,13 @@ int ParseOptions(int argc, char** argv)
 
     // For each option, check if any value has been provided (has_value).
     // If not, give it its default value.
-    for(int current_option_index = 0; current_option_index < option_number; current_option_index++)
+    for(int option_to_set_index = 0; option_to_set_index < option_number; option_to_set_index++)
     {
-        if(private_options[current_option_index].opt_has_value == false)
+        if(private_options[option_to_set_index].opt_has_value == false)
         {
             // If the value provided value is OK, then assign it to the destination variable.
-            AssignValue(&private_options[current_option_index], private_options[current_option_index].pub_opt.opt_default_value);
-            private_options[current_option_index].opt_has_value = true;
+            AssignValue(&private_options[option_to_set_index], private_options[option_to_set_index].pub_opt.opt_default_value);
+            private_options[option_to_set_index].opt_has_value = true;
         }
     }
 
