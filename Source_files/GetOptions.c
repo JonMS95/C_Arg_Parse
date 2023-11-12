@@ -4,7 +4,6 @@
 
 #include "SeverityLog_api.h"
 #include "GetOptions.h"
-#include <stdlib.h>
 #include <string.h> // strlen, strcmp
 
 
@@ -28,6 +27,7 @@ static int                  option_number           = 0;
 static int                  verbose_flag            = 1;
 static PRIV_OPT_LONG        opt_long_verbose        = {"verbose"    , no_argument   ,   &verbose_flag,  1};
 static PRIV_OPT_LONG        opt_long_brief          = {"brief"      , no_argument   ,   &verbose_flag,  0};
+char max_str[GET_OPT_SIZE_CHAR_STRING_MAX + 1]      = {};
 
 /******** Private heap variables ********/
 
@@ -918,13 +918,13 @@ char* GetOptionsGenFormattedStr(char* string_to_format, int data_type)
 
     for(int i = 0; i < strlen(string_to_format); i++)
     {
-        if(string_to_format[i] == '%')
+        if(string_to_format[i] == GET_OPT_STR_FORMAT_PRECEDENT)
         {
             percentage_found = true;
             continue;
         }
 
-        if(percentage_found == true && string_to_format[i] == 'z')
+        if(percentage_found == true && string_to_format[i] == GET_OPT_STR_FORMAT_TARGET)
         {
             string_to_format[i] = target_formatter;
         }
@@ -935,7 +935,53 @@ char* GetOptionsGenFormattedStr(char* string_to_format, int data_type)
     return string_to_format;
 }
 
-void ShowOptions()
+/// @brief Prints min max and default data values.
+/// @param option_summary_msg Format of message to be printed.
+/// @param var_type Variable type.
+/// @param blank_spaces_count Amount of blank spaces preceeding variable value.
+/// @param var_to_print Variable to be printed.
+void PrintBoundaryData(char* option_summary_msg, int var_type, int blank_spaces_count, OPT_DATA_TYPE var_to_print)
+{
+    char* formatted_string = GetOptionsGenFormattedStr(option_summary_msg, var_type);
+
+    switch(var_type)
+    {
+        case GET_OPT_TYPE_INT:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.integer);
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.character);
+        }
+        break;
+
+        case GET_OPT_TYPE_FLOAT:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.floating);
+        }
+        break;
+
+        case GET_OPT_TYPE_DOUBLE:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.doubling);
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.char_string);
+        }
+        break;
+
+        default:
+        break;
+    }
+}
+
+void ShowOptions(void)
 {
     LOG_INF(GET_OPT_MSG_OPT_SUMMARY_HEADER);
     for(int option_num = 0; option_num < option_number; option_num++)
@@ -958,15 +1004,15 @@ void ShowOptions()
         
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_MIN_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_MIN_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_min_value);
-        
+        PrintBoundaryData(option_summary_msg, private_options[option_num].pub_opt.opt_var_type, blank_spaces, private_options[option_num].pub_opt.opt_min_value);
+
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_MAX_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_MAX_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_max_value);
-        
+        PrintBoundaryData(option_summary_msg, private_options[option_num].pub_opt.opt_var_type, blank_spaces, private_options[option_num].pub_opt.opt_max_value);
+
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_DEFAULT_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_DEFAULT_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_default_value);
+        PrintBoundaryData(option_summary_msg, private_options[option_num].pub_opt.opt_var_type, blank_spaces, private_options[option_num].pub_opt.opt_default_value);
 
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_ASSIGNED_VALUE);
@@ -1006,6 +1052,36 @@ void ShowOptions()
         }
         LOG_INF(GET_OPT_MSG_OPT_SUMMARY_FOOTER);
     }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set double option definition without boundaries.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionStringNL(char opt_char                ,
+                                char* opt_long                ,
+                                char* opt_detail              ,
+                                char* opt_default_value       ,
+                                void* opt_dest_var            )
+{
+    memset(max_str, UCHAR_MAX, GET_OPT_SIZE_CHAR_STRING_MAX);
+
+    int set_opt = SetOptionDefinition(  opt_char                                            ,
+                                        opt_long                                            ,
+                                        opt_detail                                          ,
+                                        GET_OPT_TYPE_CHAR_STRING                            ,
+                                        GET_OPT_ARG_REQ_REQUIRED                            ,
+                                        (OPT_DATA_TYPE){.char_string = "\0"}                ,
+                                        (OPT_DATA_TYPE){.char_string = max_str}             ,
+                                        (OPT_DATA_TYPE){.char_string = opt_default_value}   ,
+                                        opt_dest_var                                        );
+
+    return set_opt;
 }
 
 /**************************************/
