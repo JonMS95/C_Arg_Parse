@@ -179,8 +179,8 @@ int TestParseOptions(int argc, char** argv)
 
     float test_1;
     int test_2, test_3;
-    char* test_4 = calloc(10, 1);
-    char* test_5 = calloc(10, 1);
+    char* test_4 = calloc(20, 1);
+    char test_5[20] = {};
 
     SetOptionDefinitionFloat(   'r'                                 ,
                                 "TestParse1"                        ,
@@ -218,13 +218,13 @@ int TestParseOptions(int argc, char** argv)
                         (OPT_DATA_TYPE)"aaa"                    ,
                         (OPT_DATA_TYPE)"zzz"                    ,
                         (OPT_DATA_TYPE)"bbb"                    ,
-                        &test_4                                 );
+                        test_4                                 );
 
     SetOptionDefinitionStringNL('x'         ,
                                 "TestParse5",
                                 "String NL" ,
                                 "zzzzz"     ,
-                                &test_5     );
+                                test_5     );
 
     SetSeverityLogPrintTimeStatus(true);
 
