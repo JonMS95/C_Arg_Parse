@@ -22,7 +22,6 @@ extern "C" {
 
 #define GET_OPT_SIZE_LONG_MAX           20
 #define GET_OPT_SIZE_DETAIL_MAX         50
-#define GET_OPT_SIZE_CHAR_STRING_MAX    100
 
 /*****************************/
 
