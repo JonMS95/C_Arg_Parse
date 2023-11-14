@@ -18,7 +18,8 @@
 
 /******** Field sizes ********/
 
-#define GET_OPT_SIZE_VERB_BRIEF 2
+#define GET_OPT_SIZE_VERB_BRIEF         2
+#define GET_OPT_SIZE_CHAR_STRING_MAX    100
 
 /******** Error codes ********/
 
@@ -71,6 +72,8 @@
 #define GET_OPT_MSG_OPT_DEFAULT_VALUE       "Default value: %*s%@"
 #define GET_OPT_MSG_OPT_ASSIGNED_VALUE      "Assigned value: %*s%@"
 #define GET_OPT_MSG_OPT_VAL_SEPARATOR       ""
+#define GET_OPT_MSG_OPT_MIN_STR_VALUE       "Minimum value: %*s\\0"
+#define GET_OPT_MSG_OPT_MAX_STR_VALUE       "Maximum value: %*sUCHAR_MAX * %d"
 
 /***********************************/
 
