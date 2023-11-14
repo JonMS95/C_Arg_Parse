@@ -27,6 +27,7 @@ static int                  option_number           = 0;
 static int                  verbose_flag            = 1;
 static PRIV_OPT_LONG        opt_long_verbose        = {"verbose"    , no_argument   ,   &verbose_flag,  1};
 static PRIV_OPT_LONG        opt_long_brief          = {"brief"      , no_argument   ,   &verbose_flag,  0};
+char min_str[] = {0};
 char max_str[GET_OPT_SIZE_CHAR_STRING_MAX + 1]      = {};
 
 /******** Private heap variables ********/
@@ -709,7 +710,7 @@ void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
 
         case GET_OPT_TYPE_CHAR_STRING:
         {
-            strcpy(*(char**)(priv_opt_def->pub_opt.opt_dest_var), src.char_string);
+            strcpy((char*)(priv_opt_def->pub_opt.opt_dest_var), src.char_string);
         }
         break;
 
@@ -865,6 +866,8 @@ int ParseOptions(int argc, char** argv)
 
     ShowOptions();
 
+    FreeHeapOptData();
+
     return GET_OPT_SUCCESS;
 }
 
@@ -972,6 +975,20 @@ void PrintBoundaryData(char* option_summary_msg, int var_type, int blank_spaces_
 
         case GET_OPT_TYPE_CHAR_STRING:
         {
+            if(strcmp(var_to_print.char_string, min_str) == 0)
+            {
+                char* msg_min_len_str = GET_OPT_MSG_OPT_MIN_STR_VALUE;
+                LOG_INF(msg_min_len_str, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR);
+                return;
+            }
+
+            if(strcmp(var_to_print.char_string, max_str) == 0)
+            {
+                char* msg_max_len_str = GET_OPT_MSG_OPT_MAX_STR_VALUE;
+                LOG_INF(msg_max_len_str, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, GET_OPT_SIZE_CHAR_STRING_MAX);
+                return;
+            }
+
             LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.char_string);
         }
         break;
@@ -1044,7 +1061,7 @@ void ShowOptions(void)
             break;
 
             case GET_OPT_TYPE_CHAR_STRING:
-                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, (*(char**)(private_options[option_num].pub_opt.opt_dest_var)));
+                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, ((char*)(private_options[option_num].pub_opt.opt_dest_var)));
             break;
             
             default:
@@ -1076,7 +1093,7 @@ int SetOptionDefinitionStringNL(char opt_char                ,
                                         opt_detail                                          ,
                                         GET_OPT_TYPE_CHAR_STRING                            ,
                                         GET_OPT_ARG_REQ_REQUIRED                            ,
-                                        (OPT_DATA_TYPE){.char_string = "\0"}                ,
+                                        (OPT_DATA_TYPE){.char_string = min_str}             ,
                                         (OPT_DATA_TYPE){.char_string = max_str}             ,
                                         (OPT_DATA_TYPE){.char_string = opt_default_value}   ,
                                         opt_dest_var                                        );
