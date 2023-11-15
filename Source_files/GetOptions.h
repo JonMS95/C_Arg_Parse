@@ -19,7 +19,6 @@
 /******** Field sizes ********/
 
 #define GET_OPT_SIZE_VERB_BRIEF         2
-#define GET_OPT_SIZE_CHAR_STRING_MAX    100
 
 /******** Error codes ********/
 
