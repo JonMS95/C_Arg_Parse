@@ -6,7 +6,6 @@
 #include "GetOptions.h"
 #include <string.h> // strlen, strcmp
 
-
 /************************************/
 
 /***********************************/
@@ -27,8 +26,8 @@ static int                  option_number           = 0;
 static int                  verbose_flag            = 1;
 static PRIV_OPT_LONG        opt_long_verbose        = {"verbose"    , no_argument   ,   &verbose_flag,  1};
 static PRIV_OPT_LONG        opt_long_brief          = {"brief"      , no_argument   ,   &verbose_flag,  0};
-char min_str[] = {0};
-char max_str[GET_OPT_SIZE_CHAR_STRING_MAX + 1]      = {};
+char min_str[]              = {0};
+char max_str[PATH_MAX + 1]  = {};
 
 /******** Private heap variables ********/
 
@@ -242,11 +241,21 @@ int CheckBoundaries(int opt_var_type    ,
 /// @param opt_default_value Option default value.
 /// @return GET_OPT_ERR_VAL_OUT_OF_BOUNDS if value is out of bounds, GET_OPT_SUCCESS otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckValueInRange(   int             opt_var_type        ,
-                                OPT_DATA_TYPE   opt_min_value     ,
-                                OPT_DATA_TYPE   opt_max_value     ,
-                                OPT_DATA_TYPE   opt_check_value )
+int CheckValueInRange(  int             opt_var_type    ,
+                        OPT_DATA_TYPE   opt_min_value   ,
+                        OPT_DATA_TYPE   opt_max_value   ,
+                        OPT_DATA_TYPE   opt_check_value )
 {
+    if(opt_var_type == GET_OPT_TYPE_CHAR_STRING)
+    {
+        int check_string_min        = strlen(opt_min_value.char_string  )   > PATH_MAX ? -1 : 0;
+        int check_string_max        = strlen(opt_max_value.char_string  )   > PATH_MAX ? -1 : 0;
+        int check_string_default    = strlen(opt_check_value.char_string)   > PATH_MAX ? -1 : 0;
+
+        if(check_string_min < 0 || check_string_max < 0 || check_string_default < 0)
+            return GET_OPT_ERR_VAL_OUT_OF_BOUNDS;
+    }
+
     int check_def_val_be_min = CheckOptLowerOrEqual(opt_var_type, opt_min_value, opt_check_value);
     int check_def_val_le_max = CheckOptLowerOrEqual(opt_var_type, opt_check_value, opt_max_value);
 
@@ -985,7 +994,7 @@ void PrintBoundaryData(char* option_summary_msg, int var_type, int blank_spaces_
             if(strcmp(var_to_print.char_string, max_str) == 0)
             {
                 char* msg_max_len_str = GET_OPT_MSG_OPT_MAX_STR_VALUE;
-                LOG_INF(msg_max_len_str, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, GET_OPT_SIZE_CHAR_STRING_MAX);
+                LOG_INF(msg_max_len_str, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, PATH_MAX);
                 return;
             }
 
@@ -1086,7 +1095,7 @@ int SetOptionDefinitionStringNL(char opt_char                ,
                                 char* opt_default_value       ,
                                 void* opt_dest_var            )
 {
-    memset(max_str, UCHAR_MAX, GET_OPT_SIZE_CHAR_STRING_MAX);
+    memset(max_str, UCHAR_MAX, PATH_MAX);
 
     int set_opt = SetOptionDefinition(  opt_char                                            ,
                                         opt_long                                            ,
