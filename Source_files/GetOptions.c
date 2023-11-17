@@ -4,9 +4,7 @@
 
 #include "SeverityLog_api.h"
 #include "GetOptions.h"
-#include <stdlib.h>
 #include <string.h> // strlen, strcmp
-
 
 /************************************/
 
@@ -28,6 +26,8 @@ static int                  option_number           = 0;
 static int                  verbose_flag            = 1;
 static PRIV_OPT_LONG        opt_long_verbose        = {"verbose"    , no_argument   ,   &verbose_flag,  1};
 static PRIV_OPT_LONG        opt_long_brief          = {"brief"      , no_argument   ,   &verbose_flag,  0};
+char min_str[]              = {0};
+char max_str[PATH_MAX + 1]  = {0};
 
 /******** Private heap variables ********/
 
@@ -44,8 +44,8 @@ void FreeHeapOptData(void)
 {
     if(short_options_string == NULL)
     {
-        SeverityLog(SVRTY_LVL_WNG, GET_OPT_MSG_ALREADY_NULL_PTR);
-        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s\r\n", __FILE__, __func__, __LINE__, getName(short_options_string));
+        LOG_WNG(GET_OPT_MSG_ALREADY_NULL_PTR);
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s", __FILE__, __func__, __LINE__, getName(short_options_string));
     }
     else
     {
@@ -56,8 +56,8 @@ void FreeHeapOptData(void)
 
     if(private_options == NULL)
     {
-        SeverityLog(SVRTY_LVL_WNG, GET_OPT_MSG_ALREADY_NULL_PTR);
-        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s\r\n", __FILE__, __func__, __LINE__, getName(private_options));
+        LOG_WNG(GET_OPT_MSG_ALREADY_NULL_PTR);
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s", __FILE__, __func__, __LINE__, getName(private_options));
     }
     else
     {
@@ -96,11 +96,11 @@ int CheckExistingOptionLong(char* current_opt_long)
     {
         if(strcmp((char*)(private_options[i].pub_opt.opt_long), current_opt_long) == 0)
         {
-            SeverityLog(SVRTY_LVL_WNG,
-                        GET_OPT_MSG_OPT_LONG_ALREADY_EXISTS,
-                        private_options[i].pub_opt.opt_char,
-                        private_options[i].pub_opt.opt_long,
-                        private_options[i].pub_opt.opt_detail);
+            LOG_WNG(GET_OPT_MSG_OPT_LONG_ALREADY_EXISTS,
+                    private_options[i].pub_opt.opt_char,
+                    private_options[i].pub_opt.opt_long,
+                    private_options[i].pub_opt.opt_detail);
+
             return GET_OPT_ERR_OPT_LONG_ALREADY_EXISTS;
         }
     }
@@ -161,9 +161,7 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             int maximum = max.integer;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
         }
         break;
 
@@ -173,9 +171,7 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             char maximum = max.character;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
         }
         break;
 
@@ -185,9 +181,7 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             float maximum = max.floating;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
         }
         break;
 
@@ -197,9 +191,17 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
             double maximum = max.doubling;
 
             if(minimum > maximum)
-            {
                 return GET_OPT_ERR_WRONG_BOUNDARIES;
-            }
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            char* minimum = min.char_string;
+            char* maximum = max.char_string;
+            
+            if(strcmp(minimum, maximum) > 0)
+                return GET_OPT_ERR_WRONG_BOUNDARIES;
         }
         break;
         
@@ -239,11 +241,21 @@ int CheckBoundaries(int opt_var_type    ,
 /// @param opt_default_value Option default value.
 /// @return GET_OPT_ERR_VAL_OUT_OF_BOUNDS if value is out of bounds, GET_OPT_SUCCESS otherwise.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-int CheckValueInRange(   int             opt_var_type        ,
-                                OPT_DATA_TYPE   opt_min_value     ,
-                                OPT_DATA_TYPE   opt_max_value     ,
-                                OPT_DATA_TYPE   opt_check_value )
+int CheckValueInRange(  int             opt_var_type    ,
+                        OPT_DATA_TYPE   opt_min_value   ,
+                        OPT_DATA_TYPE   opt_max_value   ,
+                        OPT_DATA_TYPE   opt_check_value )
 {
+    if(opt_var_type == GET_OPT_TYPE_CHAR_STRING)
+    {
+        int check_string_min        = strlen(opt_min_value.char_string  )   > PATH_MAX ? -1 : 0;
+        int check_string_max        = strlen(opt_max_value.char_string  )   > PATH_MAX ? -1 : 0;
+        int check_string_default    = strlen(opt_check_value.char_string)   > PATH_MAX ? -1 : 0;
+
+        if(check_string_min < 0 || check_string_max < 0 || check_string_default < 0)
+            return GET_OPT_ERR_VAL_OUT_OF_BOUNDS;
+    }
+
     int check_def_val_be_min = CheckOptLowerOrEqual(opt_var_type, opt_min_value, opt_check_value);
     int check_def_val_le_max = CheckOptLowerOrEqual(opt_var_type, opt_check_value, opt_max_value);
 
@@ -348,7 +360,7 @@ int SetOptionDefinition(char            opt_char            ,
     // Check if option character exists.
     if(opt_char == '\0')
     {
-        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NO_OPT_CHAR);
+        LOG_ERR(GET_OPT_MSG_NO_OPT_CHAR);
         FreeHeapOptData();
         return GET_OPT_ERR_NO_OPT_CHAR;
     }
@@ -366,7 +378,7 @@ int SetOptionDefinition(char            opt_char            ,
     // Check if option long string exists.
     if(opt_long == NULL)
     {
-        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NO_OPT_LONG);
+        LOG_ERR(GET_OPT_MSG_NO_OPT_LONG);
         FreeHeapOptData();
         return GET_OPT_ERR_NO_OPT_LONG;
     }
@@ -376,7 +388,7 @@ int SetOptionDefinition(char            opt_char            ,
     {
         if(strlen(opt_long) > GET_OPT_SIZE_LONG_MAX)
         {
-            SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_LONG_LENGTH_EXCEEDED);
+            LOG_ERR(GET_OPT_MSG_LONG_LENGTH_EXCEEDED);
             FreeHeapOptData();
             return GET_OPT_ERR_LONG_LENGTH_EXCEEDED;
         }
@@ -395,10 +407,9 @@ int SetOptionDefinition(char            opt_char            ,
     // Check if option detail exists.
     if(opt_detail == NULL)
     {
-        SeverityLog(SVRTY_LVL_WNG               ,
-                    GET_OPT_MSG_NO_OPT_DETAIL   ,
-                    opt_char                    ,
-                    opt_long                    );
+        LOG_WNG(GET_OPT_MSG_NO_OPT_DETAIL   ,
+                opt_char                    ,
+                opt_long                    );
     }
 
     // If option detail exists, then check if its length exceeds the allowed maximum.
@@ -406,7 +417,7 @@ int SetOptionDefinition(char            opt_char            ,
     {
         if(strlen(opt_detail) > GET_OPT_SIZE_DETAIL_MAX)
         {
-            SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_DETAIL_LENGTH_EXCEEDED);
+            LOG_ERR(GET_OPT_MSG_DETAIL_LENGTH_EXCEEDED);
             FreeHeapOptData();
             return GET_OPT_ERR_DETAIL_LENGTH_EXCEEDED;
         }
@@ -417,11 +428,10 @@ int SetOptionDefinition(char            opt_char            ,
 
     if(check_valid_data_type < 0)
     {
-        SeverityLog(SVRTY_LVL_ERR           ,
-                    GET_OPT_MSG_UNKNOWN_TYPE,
-                    opt_char                ,
-                    opt_long                ,
-                    opt_detail              );
+        LOG_ERR(GET_OPT_MSG_UNKNOWN_TYPE,
+                opt_char                ,
+                opt_long                ,
+                opt_detail              );
         FreeHeapOptData();
         return check_valid_data_type;
     }
@@ -431,11 +441,10 @@ int SetOptionDefinition(char            opt_char            ,
     
     if(check_opt_arg_requirement < 0)
     {
-        SeverityLog(SVRTY_LVL_ERR               ,
-                    GET_OPT_MSG_UNKNOWN_ARG_REQ ,
-                    opt_char                    ,
-                    opt_long                    ,
-                    opt_detail                  );
+        LOG_ERR(GET_OPT_MSG_UNKNOWN_ARG_REQ ,
+                opt_char                    ,
+                opt_long                    ,
+                opt_detail                  );
         FreeHeapOptData();
         return check_opt_arg_requirement;
     }
@@ -448,11 +457,10 @@ int SetOptionDefinition(char            opt_char            ,
         
         if(check_opt_min_max < 0)
         {
-            SeverityLog(SVRTY_LVL_ERR               ,
-                        GET_OPT_MSG_WRONG_BOUNDARIES,
-                        opt_char                    ,
-                        opt_long                    ,
-                        opt_detail                  );
+            LOG_ERR(GET_OPT_MSG_WRONG_BOUNDARIES,
+                    opt_char                    ,
+                    opt_long                    ,
+                    opt_detail                  );
             FreeHeapOptData();
             return check_opt_min_max;
         }
@@ -465,11 +473,10 @@ int SetOptionDefinition(char            opt_char            ,
 
         if(check_default_value < 0)
         {
-            SeverityLog(SVRTY_LVL_ERR                       ,
-                        GET_OPT_MSG_DEF_VAL_OUT_OF_BOUNDS   ,
-                        opt_char                            ,
-                        opt_long                            ,
-                        opt_detail                          );
+            LOG_ERR(GET_OPT_MSG_DEF_VAL_OUT_OF_BOUNDS   ,
+                    opt_char                            ,
+                    opt_long                            ,
+                    opt_detail                          );
             FreeHeapOptData();
             return check_default_value;
         }
@@ -478,11 +485,10 @@ int SetOptionDefinition(char            opt_char            ,
     // Check whether if the pointer to the target output variable is null or not.
     if(opt_dest_var == NULL)
     {
-        SeverityLog(SVRTY_LVL_ERR               , 
-                    GET_OPT_MSG_NULL_DEST_VAR   ,
-                    opt_char                    ,
-                    opt_long                    ,
-                    opt_detail                  );
+        LOG_ERR(GET_OPT_MSG_NULL_DEST_VAR   ,
+                opt_char                    ,
+                opt_long                    ,
+                opt_detail                  );
         FreeHeapOptData();
         return GET_OPT_ERR_NULL_DEST_VAR;
     }
@@ -500,7 +506,7 @@ int SetOptionDefinition(char            opt_char            ,
 
     if(fill_private_opt_struct < 0)
     {
-        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_OPT_NUM_ZERO);
+        LOG_ERR(GET_OPT_MSG_OPT_NUM_ZERO);
         FreeHeapOptData();
         return fill_private_opt_struct;
     }
@@ -545,7 +551,7 @@ int GenerateShortOptStr(void)
 {
     if(private_options        == NULL)
     {
-        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
@@ -593,7 +599,7 @@ int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 {
     if(priv_opt_long == NULL)
     {
-        SeverityLog(SVRTY_LVL_DBG, "FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %dss", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
@@ -632,11 +638,10 @@ void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_T
         {
             if(strlen(optarg) > 1)
             {
-                SeverityLog(SVRTY_LVL_WNG                   ,
-                            GET_OPT_MSG_STRING_NOT_CHAR     ,
-                            priv_opt_def->pub_opt.opt_char  ,
-                            priv_opt_def->pub_opt.opt_long  ,
-                            priv_opt_def->pub_opt.opt_detail);
+                LOG_WNG(GET_OPT_MSG_STRING_NOT_CHAR     ,
+                        priv_opt_def->pub_opt.opt_char  ,
+                        priv_opt_def->pub_opt.opt_long  ,
+                        priv_opt_def->pub_opt.opt_detail);
             }
             dest->character = (char)atoi(arg);
         }
@@ -651,6 +656,12 @@ void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_T
         case GET_OPT_TYPE_DOUBLE:
         {
             dest->doubling = strtod(arg, NULL);
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            dest->char_string = arg;
         }
         break;
 
@@ -699,6 +710,12 @@ void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
         }
         break;
 
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            strcpy((char*)(priv_opt_def->pub_opt.opt_dest_var), src.char_string);
+        }
+        break;
+
         default:
         break;
     }
@@ -718,7 +735,7 @@ int ParseOptions(int argc, char** argv)
     
     if(generate_short_options_string < 0)
     {
-        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NULL_PTR);
+        LOG_ERR(GET_OPT_MSG_NULL_PTR);
         FreeHeapOptData();
         return generate_short_options_string;
     }
@@ -729,7 +746,7 @@ int ParseOptions(int argc, char** argv)
 
     if(generate_opt_long < 0)
     {
-        SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NULL_PTR);
+        LOG_ERR(GET_OPT_MSG_NULL_PTR);
         FreeHeapOptData();
         return generate_opt_long;
     }
@@ -750,7 +767,7 @@ int ParseOptions(int argc, char** argv)
             {
                 if(verbose_flag == 0)
                 {
-                    SetSeverityLogMask(SVRTY_LOG_MASK_ERR);
+                    SetSeverityLogMask(SVRTY_LOG_MASK_OFF);
                 }
                 else
                 {
@@ -762,7 +779,7 @@ int ParseOptions(int argc, char** argv)
             // Missing option argument.
             case ':':
             {
-                SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_NO_ARG_FOUND, optopt);
+                LOG_ERR(GET_OPT_MSG_NO_ARG_FOUND, optopt);
                 FreeHeapOptData();
                 return GET_OPT_ERR_NO_ARG_FOUND;
             }
@@ -771,7 +788,7 @@ int ParseOptions(int argc, char** argv)
             // Invalid option.
             case '?':
             {
-                SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_UNKNOWN_OPTION, optopt);
+                LOG_ERR(GET_OPT_MSG_UNKNOWN_OPTION, optopt);
                 FreeHeapOptData();
                 return GET_OPT_ERR_UNKNOWN_OPTION;
             }
@@ -780,7 +797,6 @@ int ParseOptions(int argc, char** argv)
             default:
             {
                 // First of all, get the index of the current option within the private option structure array.
-
                 int current_option_index;
                 for(current_option_index = 0; current_option_index < option_number; current_option_index++)
                 {
@@ -822,11 +838,10 @@ int ParseOptions(int argc, char** argv)
 
                 if(check_value_in_range < 0)
                 {
-                    SeverityLog(SVRTY_LVL_ERR                                           ,
-                                GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS                      ,
-                                private_options[current_option_index].pub_opt.opt_char  ,
-                                private_options[current_option_index].pub_opt.opt_long  ,
-                                private_options[current_option_index].pub_opt.opt_detail);
+                    LOG_ERR(GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS                      ,
+                            private_options[current_option_index].pub_opt.opt_char  ,
+                            private_options[current_option_index].pub_opt.opt_long  ,
+                            private_options[current_option_index].pub_opt.opt_detail);
                     FreeHeapOptData();
                     return check_value_in_range;
                 }
@@ -840,17 +855,19 @@ int ParseOptions(int argc, char** argv)
 
     // For each option, check if any value has been provided (has_value).
     // If not, give it its default value.
-    for(int current_option_index = 0; current_option_index < option_number; current_option_index++)
+    for(int option_to_set_index = 0; option_to_set_index < option_number; option_to_set_index++)
     {
-        if(private_options[current_option_index].opt_has_value == false)
+        if(private_options[option_to_set_index].opt_has_value == false)
         {
             // If the value provided value is OK, then assign it to the destination variable.
-            AssignValue(&private_options[current_option_index], private_options[current_option_index].pub_opt.opt_default_value);
-            private_options[current_option_index].opt_has_value = true;
+            AssignValue(&private_options[option_to_set_index], private_options[option_to_set_index].pub_opt.opt_default_value);
+            private_options[option_to_set_index].opt_has_value = true;
         }
     }
 
     ShowOptions();
+
+    FreeHeapOptData();
 
     return GET_OPT_SUCCESS;
 }
@@ -889,9 +906,15 @@ char* GetOptionsGenFormattedStr(char* string_to_format, int data_type)
         }
         break;
         
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            target_formatter = 's';
+        }
+        break;
+
         default:
         {
-            SeverityLog(SVRTY_LVL_ERR, GET_OPT_MSG_UNKNOWN_TYPE);
+            LOG_ERR(GET_OPT_MSG_UNKNOWN_TYPE);
             return string_to_format;
         }
         break;
@@ -899,13 +922,13 @@ char* GetOptionsGenFormattedStr(char* string_to_format, int data_type)
 
     for(int i = 0; i < strlen(string_to_format); i++)
     {
-        if(string_to_format[i] == '%')
+        if(string_to_format[i] == GET_OPT_STR_FORMAT_PRECEDENT)
         {
             percentage_found = true;
             continue;
         }
 
-        if(percentage_found == true && string_to_format[i] == 'z')
+        if(percentage_found == true && string_to_format[i] == GET_OPT_STR_FORMAT_TARGET)
         {
             string_to_format[i] = target_formatter;
         }
@@ -916,7 +939,67 @@ char* GetOptionsGenFormattedStr(char* string_to_format, int data_type)
     return string_to_format;
 }
 
-void ShowOptions()
+/// @brief Prints min max and default data values.
+/// @param option_summary_msg Format of message to be printed.
+/// @param var_type Variable type.
+/// @param blank_spaces_count Amount of blank spaces preceeding variable value.
+/// @param var_to_print Variable to be printed.
+void PrintBoundaryData(char* option_summary_msg, int var_type, int blank_spaces_count, OPT_DATA_TYPE var_to_print)
+{
+    char* formatted_string = GetOptionsGenFormattedStr(option_summary_msg, var_type);
+
+    switch(var_type)
+    {
+        case GET_OPT_TYPE_INT:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.integer);
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.character);
+        }
+        break;
+
+        case GET_OPT_TYPE_FLOAT:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.floating);
+        }
+        break;
+
+        case GET_OPT_TYPE_DOUBLE:
+        {
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.doubling);
+        }
+        break;
+
+        case GET_OPT_TYPE_CHAR_STRING:
+        {
+            if(strcmp(var_to_print.char_string, min_str) == 0)
+            {
+                char* msg_min_len_str = GET_OPT_MSG_OPT_MIN_STR_VALUE;
+                LOG_INF(msg_min_len_str, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR);
+                return;
+            }
+
+            if(strcmp(var_to_print.char_string, max_str) == 0)
+            {
+                char* msg_max_len_str = GET_OPT_MSG_OPT_MAX_STR_VALUE;
+                LOG_INF(msg_max_len_str, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, PATH_MAX);
+                return;
+            }
+
+            LOG_INF(formatted_string, blank_spaces_count, GET_OPT_MSG_OPT_VAL_SEPARATOR, var_to_print.char_string);
+        }
+        break;
+
+        default:
+        break;
+    }
+}
+
+void ShowOptions(void)
 {
     LOG_INF(GET_OPT_MSG_OPT_SUMMARY_HEADER);
     for(int option_num = 0; option_num < option_number; option_num++)
@@ -939,15 +1022,15 @@ void ShowOptions()
         
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_MIN_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_MIN_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_min_value);
-        
+        PrintBoundaryData(option_summary_msg, private_options[option_num].pub_opt.opt_var_type, blank_spaces, private_options[option_num].pub_opt.opt_min_value);
+
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_MAX_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_MAX_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_max_value);
-        
+        PrintBoundaryData(option_summary_msg, private_options[option_num].pub_opt.opt_var_type, blank_spaces, private_options[option_num].pub_opt.opt_max_value);
+
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_DEFAULT_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_DEFAULT_VALUE);
-        LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, private_options[option_num].pub_opt.opt_default_value);
+        PrintBoundaryData(option_summary_msg, private_options[option_num].pub_opt.opt_var_type, blank_spaces, private_options[option_num].pub_opt.opt_default_value);
 
         blank_spaces = longest_opt_info_len - (int)strlen(GET_OPT_MSG_OPT_ASSIGNED_VALUE);
         memset(option_summary_msg, 0, sizeof(option_summary_msg)); strcpy(option_summary_msg, GET_OPT_MSG_OPT_ASSIGNED_VALUE);
@@ -977,12 +1060,46 @@ void ShowOptions()
             case GET_OPT_TYPE_DOUBLE:
                 LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, *((double*)(private_options[option_num].pub_opt.opt_dest_var)));
             break;
+
+            case GET_OPT_TYPE_CHAR_STRING:
+                LOG_INF(GetOptionsGenFormattedStr(option_summary_msg, private_options[option_num].pub_opt.opt_var_type), blank_spaces, GET_OPT_MSG_OPT_VAL_SEPARATOR, ((char*)(private_options[option_num].pub_opt.opt_dest_var)));
+            break;
             
             default:
             break;
         }
         LOG_INF(GET_OPT_MSG_OPT_SUMMARY_FOOTER);
     }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+/// @brief Set double option definition without boundaries.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionStringNoLimits(  char opt_char           ,
+                                        char* opt_long          ,
+                                        char* opt_detail        ,
+                                        char* opt_default_value ,
+                                        void* opt_dest_var      )
+{
+    memset(max_str, UCHAR_MAX, PATH_MAX);
+
+    int set_opt = SetOptionDefinition(  opt_char                                            ,
+                                        opt_long                                            ,
+                                        opt_detail                                          ,
+                                        GET_OPT_TYPE_CHAR_STRING                            ,
+                                        GET_OPT_ARG_REQ_REQUIRED                            ,
+                                        (OPT_DATA_TYPE){.char_string = min_str}             ,
+                                        (OPT_DATA_TYPE){.char_string = max_str}             ,
+                                        (OPT_DATA_TYPE){.char_string = opt_default_value}   ,
+                                        opt_dest_var                                        );
+
+    return set_opt;
 }
 
 /**************************************/

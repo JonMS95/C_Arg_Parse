@@ -5,9 +5,10 @@
 /******** Include statements ********/
 /************************************/
 
-#include "GetOptions_api.h"
 #include <stdbool.h>
 #include <getopt.h>
+#include <stdlib.h> // malloc in SetOptionDefinitionStringNL
+#include "GetOptions_api.h"
 
 /************************************/
 
@@ -17,7 +18,7 @@
 
 /******** Field sizes ********/
 
-#define GET_OPT_SIZE_VERB_BRIEF 2
+#define GET_OPT_SIZE_VERB_BRIEF         2
 
 /******** Error codes ********/
 
@@ -39,35 +40,39 @@
 #define GET_OPT_ERR_UNKNOWN_OPTION          -15
 
 /******** Messages ********/
-#define GET_OPT_MSG_NO_OPT_CHAR             "No option character provided.\r\n"
-#define GET_OPT_MSG_OPT_CHAR_ALREADY_EXISTS "Option char already exists: -%c --%s (%s).\r\n"
-#define GET_OPT_MSG_NO_OPT_LONG             "No option long form provided.\r\n"
-#define GET_OPT_MSG_LONG_LENGTH_EXCEEDED    "Long option definition exceeds maximum length.\r\n"
-#define GET_OPT_MSG_OPT_LONG_ALREADY_EXISTS "Option long string already exists -%c --%s (%s).\r\n"
-#define GET_OPT_MSG_NO_OPT_DETAIL           "No option detail provided for the current option: -%c --%s.\r\n"
-#define GET_OPT_MSG_DETAIL_LENGTH_EXCEEDED  "Option detail definition exceeds maximum length.\r\n"
-#define GET_OPT_MSG_UNKNOWN_TYPE            "Unknown data type: -%c --%s (%s).\r\n"
-#define GET_OPT_MSG_UNKNOWN_ARG_REQ         "Provided unknown argument requirement for the current option: -%c --%s (%s)\r\n"
-#define GET_OPT_MSG_WRONG_BOUNDARIES        "Minimum > maximum for the current option: -%c --%s (%s).\r\n"
-#define GET_OPT_MSG_DEF_VAL_OUT_OF_BOUNDS   "Default value is out of boundaries for current option: -%c --%s (%s).\r\n"
-#define GET_OPT_MSG_NULL_DEST_VAR           "Current option destination value address is not set: -%c --%s (%s).\r\n"
-#define GET_OPT_MSG_OPT_NUM_ZERO            "Current option number is zero. Should not have reached this point.\r\n"
-#define GET_OPT_MSG_NULL_PTR                "NULL pointer found.\r\n"
-#define GET_OPT_MSG_ALREADY_NULL_PTR        "Pointer to memory meant to be freed is NULL.\r\n"
-#define GET_OPT_MSG_NO_ARG_FOUND            "Option %c requires an argument!\r\n"
-#define GET_OPT_MSG_UNKNOWN_OPTION          "Unknown option (%c).\r\n"
-#define GET_OPT_MSG_STRING_NOT_CHAR         "Passed string as argument to an option that requires a character instead: -%c --%s (%s)\r\n."
-#define GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS  "Provided value is out of boundaries for current option: -%c --%s (%s).\r\n"
+#define GET_OPT_MSG_NO_OPT_CHAR             "No option character provided."
+#define GET_OPT_MSG_OPT_CHAR_ALREADY_EXISTS "Option char already exists: -%c --%s (%s)."
+#define GET_OPT_MSG_NO_OPT_LONG             "No option long form provided."
+#define GET_OPT_MSG_LONG_LENGTH_EXCEEDED    "Long option definition exceeds maximum length."
+#define GET_OPT_MSG_OPT_LONG_ALREADY_EXISTS "Option long string already exists -%c --%s (%s)."
+#define GET_OPT_MSG_NO_OPT_DETAIL           "No option detail provided for the current option: -%c --%s."
+#define GET_OPT_MSG_DETAIL_LENGTH_EXCEEDED  "Option detail definition exceeds maximum length."
+#define GET_OPT_MSG_UNKNOWN_TYPE            "Unknown data type: -%c --%s (%s)."
+#define GET_OPT_MSG_UNKNOWN_ARG_REQ         "Provided unknown argument requirement for the current option: -%c --%s (%s)"
+#define GET_OPT_MSG_WRONG_BOUNDARIES        "Minimum > maximum for the current option: -%c --%s (%s)."
+#define GET_OPT_MSG_DEF_VAL_OUT_OF_BOUNDS   "Default value is out of boundaries for current option: -%c --%s (%s)."
+#define GET_OPT_MSG_NULL_DEST_VAR           "Current option destination value address is not set: -%c --%s (%s)."
+#define GET_OPT_MSG_OPT_NUM_ZERO            "Current option number is zero. Should not have reached this point."
+#define GET_OPT_MSG_NULL_PTR                "NULL pointer found."
+#define GET_OPT_MSG_ALREADY_NULL_PTR        "Pointer to memory meant to be freed is NULL."
+#define GET_OPT_MSG_NO_ARG_FOUND            "Option %c requires an argument!"
+#define GET_OPT_MSG_UNKNOWN_OPTION          "Unknown option (%c)."
+#define GET_OPT_MSG_STRING_NOT_CHAR         "Passed string as argument to an option that requires a character instead: -%c --%s (%s)."
+#define GET_OPT_MSG_PROV_VAL_OUT_OF_BOUNDS  "Provided value is out of boundaries for current option: -%c --%s (%s)."
 #define GET_OPT_MSG_OPT_SUMMARY_HEADER      "*********** Options summary ***********"
 #define GET_OPT_MSG_OPT_SUMMARY_FOOTER      "***************************************"
 #define GET_OPT_MSG_OPT_NAME                "Option: %*s%c"
 #define GET_OPT_MSG_OPT_NAME_LONG           "Option long: %*s%s"
 #define GET_OPT_MSG_OPT_DESC                "Description: %*s%s"
-#define GET_OPT_MSG_OPT_MIN_VALUE           "Minimum value: %*s%z"
-#define GET_OPT_MSG_OPT_MAX_VALUE           "Maximum value: %*s%z"
-#define GET_OPT_MSG_OPT_DEFAULT_VALUE       "Default value: %*s%z"
-#define GET_OPT_MSG_OPT_ASSIGNED_VALUE      "Assigned value: %*s%z"
+#define GET_OPT_STR_FORMAT_PRECEDENT        '%'
+#define GET_OPT_STR_FORMAT_TARGET           '@'
+#define GET_OPT_MSG_OPT_MIN_VALUE           "Minimum value: %*s%@"
+#define GET_OPT_MSG_OPT_MAX_VALUE           "Maximum value: %*s%@"
+#define GET_OPT_MSG_OPT_DEFAULT_VALUE       "Default value: %*s%@"
+#define GET_OPT_MSG_OPT_ASSIGNED_VALUE      "Assigned value: %*s%@"
 #define GET_OPT_MSG_OPT_VAL_SEPARATOR       ""
+#define GET_OPT_MSG_OPT_MIN_STR_VALUE       "Minimum value: %*s\\0"
+#define GET_OPT_MSG_OPT_MAX_STR_VALUE       "Maximum value: %*sUCHAR_MAX * %d"
 
 /***********************************/
 
@@ -118,6 +123,7 @@ int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long);
 void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_TYPE* dest);
 void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src);
 char* GetOptionsGenFormattedStr(char* string_to_format, int data_type);
+void PrintBoundaryData(char* option_summary_msg, int var_type, int blank_spaces_count, OPT_DATA_TYPE var_to_print);
 void ShowOptions(void);
 
 /*************************************/
