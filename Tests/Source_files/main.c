@@ -5,8 +5,8 @@
 #define TEST_FLG_SUCCESS    0
 #define TEST_FLG_ERROR      -1
 
-#define TEST_MSG_SUCCEED    "Test %d succeed!\r\n"
-#define TEST_MSG_FAILED     "Test %d failed!\r\n"
+#define TEST_MSG_SUCCEED    "Test %d succeed!"
+#define TEST_MSG_FAILED     "Test %d failed!"
 
 // Same define statements as in GetOptions.h, so that it is not needed
 // to include a file that does not actually belong to the API
@@ -106,10 +106,10 @@ SetOptionDefinition_Test_Case SetOptionDefinition_Test_Indexes[]=
 ///////////////////////////////////////////////////////////////
 int Test_SetOptionDefinition()
 {
-    LOG_INF("********** SetOptionDefinition Test Start **********\r\n");
+    LOG_INF("********** SetOptionDefinition Test Start **********");
 
     int number_of_tests = sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]);
-    LOG_INF("About to do %d tests.\r\n", number_of_tests);
+    LOG_INF("About to do %d tests.", number_of_tests);
 
     int* test_results = (int*)calloc(number_of_tests, sizeof(int));
 
@@ -117,7 +117,7 @@ int Test_SetOptionDefinition()
 
     for(int i = 0; i < sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]); i++)
     {
-        LOG_INF("Test %d.\r\n", i);
+        LOG_INF("\r\nTest %d.", i);
         int set_option_definition = SetOptionDefinition(SetOptionDefinition_data.opt_char[          SetOptionDefinition_Test_Indexes[i][0]] ,
                                                         SetOptionDefinition_data.opt_long[          SetOptionDefinition_Test_Indexes[i][1]] ,
                                                         SetOptionDefinition_data.opt_det[           SetOptionDefinition_Test_Indexes[i][2]] ,
@@ -130,7 +130,7 @@ int Test_SetOptionDefinition()
 
         if(set_option_definition != SetOptionDefinition_Test_Indexes[i][9])
         {
-            LOG_ERR("Test %d failed.\tExpected %d, got %d.\r\n", i, SetOptionDefinition_Test_Indexes[i][9], set_option_definition);
+            LOG_ERR("Test %d failed.\tExpected %d, got %d.", i, SetOptionDefinition_Test_Indexes[i][9], set_option_definition);
             test_results[i] = TEST_FLG_ERROR;
             if(test_overall_result != TEST_FLG_ERROR)
             {
@@ -139,7 +139,7 @@ int Test_SetOptionDefinition()
         }
     }
 
-    LOG_INF("********** SetOptionDefinition test results **********\r\n");
+    LOG_INF("********** SetOptionDefinition test results **********");
     for(int i = 0; i < number_of_tests; i++)
     {
         if(test_results[i] == TEST_FLG_ERROR)
@@ -153,14 +153,14 @@ int Test_SetOptionDefinition()
 
     if(test_overall_result < 0)
     {
-        LOG_WNG("SetOptionDefinition test failed.\r\n");
+        LOG_WNG("SetOptionDefinition test failed.");
     }
     else
     {
-        LOG_INF("SetOptionDefinition test succeed!\r\n");
+        LOG_INF("SetOptionDefinition test succeed!");
     }
 
-    LOG_INF("********** SetOptionDefinition Test End **********\r\n");
+    LOG_INF("********** SetOptionDefinition Test End **********");
 
     free(test_results);
 
@@ -175,7 +175,7 @@ int Test_SetOptionDefinition()
 ///////////////////////////////////////////////////
 int TestParseOptions(int argc, char** argv)
 {
-    LOG_INF("********** ParseOptions Test Start **********\r\n");
+    LOG_INF("********** ParseOptions Test Start **********");
 
     float test_1;
     int test_2, test_3;
@@ -238,14 +238,14 @@ int TestParseOptions(int argc, char** argv)
 
     if(parse_options < 0)
     {
-        LOG_WNG("ParseOptions test failed.\r\n");
+        LOG_WNG("ParseOptions test failed.");
     }
     else
     {
-        LOG_INF("ParseOptions test succeed!\r\n");
+        LOG_INF("ParseOptions test succeed!");
     }
 
-    LOG_INF("********** ParseOptions Test End **********\r\n");
+    LOG_INF("********** ParseOptions Test End **********");
 
     return (parse_options < 0) ? parse_options : GET_OPT_SUCCESS;
 }

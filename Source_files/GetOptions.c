@@ -45,7 +45,7 @@ void FreeHeapOptData(void)
     if(short_options_string == NULL)
     {
         LOG_WNG(GET_OPT_MSG_ALREADY_NULL_PTR);
-        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s\r\n", __FILE__, __func__, __LINE__, getName(short_options_string));
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s", __FILE__, __func__, __LINE__, getName(short_options_string));
     }
     else
     {
@@ -57,7 +57,7 @@ void FreeHeapOptData(void)
     if(private_options == NULL)
     {
         LOG_WNG(GET_OPT_MSG_ALREADY_NULL_PTR);
-        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s\r\n", __FILE__, __func__, __LINE__, getName(private_options));
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\tPOINTER NAME: %s", __FILE__, __func__, __LINE__, getName(private_options));
     }
     else
     {
@@ -551,7 +551,7 @@ int GenerateShortOptStr(void)
 {
     if(private_options        == NULL)
     {
-        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
@@ -599,7 +599,7 @@ int GenerateOptLong(PRIV_OPT_LONG* priv_opt_long)
 {
     if(priv_opt_long == NULL)
     {
-        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d\r\n", __FILE__, __func__, __LINE__);
+        LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %dss", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
     }
 
@@ -1081,11 +1081,11 @@ void ShowOptions(void)
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-int SetOptionDefinitionStringNL(char opt_char                ,
-                                char* opt_long                ,
-                                char* opt_detail              ,
-                                char* opt_default_value       ,
-                                void* opt_dest_var            )
+int SetOptionDefinitionStringNoLimits(  char opt_char           ,
+                                        char* opt_long          ,
+                                        char* opt_detail        ,
+                                        char* opt_default_value ,
+                                        void* opt_dest_var      )
 {
     memset(max_str, UCHAR_MAX, PATH_MAX);
 
