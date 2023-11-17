@@ -767,7 +767,7 @@ int ParseOptions(int argc, char** argv)
             {
                 if(verbose_flag == 0)
                 {
-                    SetSeverityLogMask(SVRTY_LOG_MASK_ERR);
+                    SetSeverityLogMask(SVRTY_LOG_MASK_OFF);
                 }
                 else
                 {
