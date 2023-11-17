@@ -108,6 +108,21 @@ int SetOptionDefinition(char            opt_char            ,
                         void*           opt_dest_var        );
 
 //////////////////////////////////////////////////////////////////////////////
+/// @brief Set double option definition without boundaries.
+/// @param opt_char Option character.
+/// @param opt_long Option string.
+/// @param opt_detail Option details.
+/// @param opt_default_value Option default value.
+/// @param opt_dest_var Address to the variable meant to be set after parsing.
+/// @return < 0 if any error happened, 0 otherwise.
+//////////////////////////////////////////////////////////////////////////////
+int SetOptionDefinitionStringNoLimits(  char opt_char           ,
+                                        char* opt_long          ,
+                                        char* opt_detail        ,
+                                        char* opt_default_value ,
+                                        void* opt_dest_var      );
+
+//////////////////////////////////////////////////////////////////////////////
 /// @brief Set boolean option definition. 
 /// @param opt_char Option character.
 /// @param opt_long Option string.
@@ -387,11 +402,17 @@ SetOptionDefinition(opt_char                                        ,   \
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-int SetOptionDefinitionStringNL(char opt_char                ,
-                                char* opt_long                ,
-                                char* opt_detail              ,
-                                char* opt_default_value       ,
-                                void* opt_dest_var            );
+#define SetOptionDefinitionStringNL(opt_char            ,           \
+                                    opt_long            ,           \
+                                    opt_detail          ,           \
+                                    opt_default_value   ,           \
+                                    opt_dest_var        )           \
+                                                                    \
+        SetOptionDefinitionStringNoLimits(  opt_char            ,   \
+                                            opt_long            ,   \
+                                            opt_detail          ,   \
+                                            opt_default_value   ,   \
+                                            opt_dest_var        )   
 
 ///////////////////////////////////////////////////////////////////////////
 /// @brief Set multiple option definition taking a struct array as input. 
