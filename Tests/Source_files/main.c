@@ -106,10 +106,10 @@ SetOptionDefinition_Test_Case SetOptionDefinition_Test_Indexes[]=
 ///////////////////////////////////////////////////////////////
 int Test_SetOptionDefinition()
 {
-    SeverityLog(SVRTY_LVL_INF, "********** SetOptionDefinition Test Start **********\r\n");
+    LOG_INF("********** SetOptionDefinition Test Start **********\r\n");
 
     int number_of_tests = sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]);
-    SeverityLog(SVRTY_LVL_INF, "About to do %d tests.\r\n", number_of_tests);
+    LOG_INF("About to do %d tests.\r\n", number_of_tests);
 
     int* test_results = (int*)calloc(number_of_tests, sizeof(int));
 
@@ -117,7 +117,7 @@ int Test_SetOptionDefinition()
 
     for(int i = 0; i < sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]); i++)
     {
-        SeverityLog(SVRTY_LVL_INF, "Test %d.\r\n", i);
+        LOG_INF("Test %d.\r\n", i);
         int set_option_definition = SetOptionDefinition(SetOptionDefinition_data.opt_char[          SetOptionDefinition_Test_Indexes[i][0]] ,
                                                         SetOptionDefinition_data.opt_long[          SetOptionDefinition_Test_Indexes[i][1]] ,
                                                         SetOptionDefinition_data.opt_det[           SetOptionDefinition_Test_Indexes[i][2]] ,
@@ -130,7 +130,7 @@ int Test_SetOptionDefinition()
 
         if(set_option_definition != SetOptionDefinition_Test_Indexes[i][9])
         {
-            SeverityLog(SVRTY_LVL_ERR, "Test %d failed.\tExpected %d, got %d.\r\n", i, SetOptionDefinition_Test_Indexes[i][9], set_option_definition);
+            LOG_ERR("Test %d failed.\tExpected %d, got %d.\r\n", i, SetOptionDefinition_Test_Indexes[i][9], set_option_definition);
             test_results[i] = TEST_FLG_ERROR;
             if(test_overall_result != TEST_FLG_ERROR)
             {
@@ -139,28 +139,28 @@ int Test_SetOptionDefinition()
         }
     }
 
-    SeverityLog(SVRTY_LVL_INF, "********** SetOptionDefinition test results **********\r\n");
+    LOG_INF("********** SetOptionDefinition test results **********\r\n");
     for(int i = 0; i < number_of_tests; i++)
     {
         if(test_results[i] == TEST_FLG_ERROR)
         {
-            SeverityLog(SVRTY_LVL_ERR, TEST_MSG_FAILED, i);
+            LOG_ERR(TEST_MSG_FAILED, i);
             continue;
         }
 
-        SeverityLog(SVRTY_LVL_INF, TEST_MSG_SUCCEED, i);
+        LOG_INF(TEST_MSG_SUCCEED, i);
     }
 
     if(test_overall_result < 0)
     {
-        SeverityLog(SVRTY_LVL_WNG, "SetOptionDefinition test failed.\r\n");
+        LOG_WNG("SetOptionDefinition test failed.\r\n");
     }
     else
     {
-        SeverityLog(SVRTY_LVL_INF, "SetOptionDefinition test succeed!\r\n");
+        LOG_INF("SetOptionDefinition test succeed!\r\n");
     }
 
-    SeverityLog(SVRTY_LVL_INF, "********** SetOptionDefinition Test End **********\r\n");
+    LOG_INF("********** SetOptionDefinition Test End **********\r\n");
 
     free(test_results);
 
@@ -175,7 +175,7 @@ int Test_SetOptionDefinition()
 ///////////////////////////////////////////////////
 int TestParseOptions(int argc, char** argv)
 {
-    SeverityLog(SVRTY_LVL_INF, "********** ParseOptions Test Start **********\r\n");
+    LOG_INF("********** ParseOptions Test Start **********\r\n");
 
     float test_1;
     int test_2, test_3;
@@ -230,22 +230,22 @@ int TestParseOptions(int argc, char** argv)
 
     int parse_options = ParseOptions(argc, argv);
 
-    SeverityLog(SVRTY_LVL_INF, "test_1 = %2f", test_1);
-    SeverityLog(SVRTY_LVL_INF, "test_2 = %d", test_2);
-    SeverityLog(SVRTY_LVL_INF, "test_3 = %d", test_3);
-    SeverityLog(SVRTY_LVL_INF, "test_4 = %s", test_4);
-    SeverityLog(SVRTY_LVL_INF, "test_5 = %s", test_5);
+    LOG_INF("test_1 = %2f", test_1);
+    LOG_INF("test_2 = %d", test_2);
+    LOG_INF("test_3 = %d", test_3);
+    LOG_INF("test_4 = %s", test_4);
+    LOG_INF("test_5 = %s", test_5);
 
     if(parse_options < 0)
     {
-        SeverityLog(SVRTY_LVL_WNG, "ParseOptions test failed.\r\n");
+        LOG_WNG("ParseOptions test failed.\r\n");
     }
     else
     {
-        SeverityLog(SVRTY_LVL_INF, "ParseOptions test succeed!\r\n");
+        LOG_INF("ParseOptions test succeed!\r\n");
     }
 
-    SeverityLog(SVRTY_LVL_INF, "********** ParseOptions Test End **********\r\n");
+    LOG_INF("********** ParseOptions Test End **********\r\n");
 
     return (parse_options < 0) ? parse_options : GET_OPT_SUCCESS;
 }
