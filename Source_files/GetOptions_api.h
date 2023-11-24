@@ -20,6 +20,8 @@ extern "C" {
 
 /******** Field sizes ********/
 
+#define C_GET_OPTIONS_API __attribute__((visibility("default")))
+
 #define GET_OPT_SIZE_LONG_MAX           20
 #define GET_OPT_SIZE_DETAIL_MAX         50
 
@@ -29,7 +31,7 @@ extern "C" {
 /******** Type definitions ********/
 /**********************************/
 
-typedef enum
+typedef enum C_GET_OPTIONS_API
 {
     GET_OPT_TYPE_MIN            = 0,
     GET_OPT_TYPE_INT            = 0,
@@ -41,7 +43,7 @@ typedef enum
 
 } OPT_DATA_SUPPORTED_TYPES;
 
-typedef enum
+typedef enum C_GET_OPTIONS_API
 {
     GET_OPT_ARG_REQ_MIN         = 0,
     GET_OPT_ARG_REQ_NO          = 0,
@@ -51,7 +53,7 @@ typedef enum
 
 } OPT_ARG_REQUIREMENT;
 
-typedef union
+typedef union C_GET_OPTIONS_API
 {
     int     integer;
     char    character;
@@ -64,7 +66,7 @@ typedef union
 ////////////////////////////////////////////////////////////
 /// @brief Public structure, meant to be filled by the user.
 ////////////////////////////////////////////////////////////
-typedef struct
+typedef struct C_GET_OPTIONS_API
 {
     char            opt_char                                ;
     char*           opt_long[GET_OPT_SIZE_LONG_MAX + 1]     ;
@@ -97,15 +99,15 @@ typedef struct
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened.
 //////////////////////////////////////////////////////////////////////////////
-int SetOptionDefinition(char            opt_char            ,
-                        char*           opt_long            ,
-                        char*           opt_detail          ,
-                        int             opt_var_type        ,
-                        int             opt_needs_arg       ,
-                        OPT_DATA_TYPE   opt_min_value       ,
-                        OPT_DATA_TYPE   opt_max_value       ,
-                        OPT_DATA_TYPE   opt_default_value   ,
-                        void*           opt_dest_var        );
+C_GET_OPTIONS_API int SetOptionDefinition(  char            opt_char            ,
+                                            char*           opt_long            ,
+                                            char*           opt_detail          ,
+                                            int             opt_var_type        ,
+                                            int             opt_needs_arg       ,
+                                            OPT_DATA_TYPE   opt_min_value       ,
+                                            OPT_DATA_TYPE   opt_max_value       ,
+                                            OPT_DATA_TYPE   opt_default_value   ,
+                                            void*           opt_dest_var        );
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set double option definition without boundaries.
@@ -116,11 +118,11 @@ int SetOptionDefinition(char            opt_char            ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-int SetOptionDefinitionStringNoLimits(  char opt_char           ,
-                                        char* opt_long          ,
-                                        char* opt_detail        ,
-                                        char* opt_default_value ,
-                                        void* opt_dest_var      );
+C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           ,
+                                                        char* opt_long          ,
+                                                        char* opt_detail        ,
+                                                        char* opt_default_value ,
+                                                        void* opt_dest_var      );
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set boolean option definition. 
@@ -294,21 +296,21 @@ int SetOptionDefinitionStringNoLimits(  char opt_char           ,
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionFloatNL( opt_char            ,               \
-                                    opt_long            ,               \
-                                    opt_detail          ,               \
-                                    opt_default_value   ,               \
-                                    opt_dest_var        )               \
-                                                                        \
-SetOptionDefinition(opt_char                                        ,   \
-                    opt_long                                        ,   \
-                    opt_detail                                      ,   \
-                    GET_OPT_TYPE_FLOAT                              ,   \
-                    GET_OPT_ARG_REQ_REQUIRED                        ,   \
-                    (OPT_DATA_TYPE){.floating = FLT_MIN}            ,   \
-                    (OPT_DATA_TYPE){.floating = FLT_MAX}            ,   \
-                    (OPT_DATA_TYPE){.floating = opt_default_value}  ,   \
-                    opt_dest_var                                    )
+#define SetOptionDefinitionFloatNL( opt_char            ,                       \
+                                    opt_long            ,                       \
+                                    opt_detail          ,                       \
+                                    opt_default_value   ,                       \
+                                    opt_dest_var        )                       \
+                                                                                \
+        SetOptionDefinition(opt_char                                        ,   \
+                            opt_long                                        ,   \
+                            opt_detail                                      ,   \
+                            GET_OPT_TYPE_FLOAT                              ,   \
+                            GET_OPT_ARG_REQ_REQUIRED                        ,   \
+                            (OPT_DATA_TYPE){.floating = FLT_MIN}            ,   \
+                            (OPT_DATA_TYPE){.floating = FLT_MAX}            ,   \
+                            (OPT_DATA_TYPE){.floating = opt_default_value}  ,   \
+                            opt_dest_var                                    )
 
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Set double option definition.
@@ -420,7 +422,7 @@ SetOptionDefinition(opt_char                                        ,   \
 /// @param pub_opt_def_size Array size.
 /// @return < 0 if any error happened, 0 otherwise.
 ///////////////////////////////////////////////////////////////////////////
-int GetOptDefFromStruct(PUB_OPT_DEFINITION* pub_opt_def, int pub_opt_def_size);
+C_GET_OPTIONS_API int GetOptDefFromStruct(PUB_OPT_DEFINITION* pub_opt_def, int pub_opt_def_size);
 
 ////////////////////////////////////////////////////////
 /// @brief Parses given options and arguments if needed.
@@ -428,7 +430,7 @@ int GetOptDefFromStruct(PUB_OPT_DEFINITION* pub_opt_def, int pub_opt_def_size);
 /// @param argv Argument character string array.
 /// @return < 0 if any error happened, 0 otherwise.
 ////////////////////////////////////////////////////////
-int ParseOptions(int argc, char** argv);
+C_GET_OPTIONS_API int ParseOptions(int argc, char** argv);
 
 /*************************************/
 
