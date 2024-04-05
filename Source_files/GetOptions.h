@@ -16,9 +16,13 @@
 /******** Define statements ********/
 /***********************************/
 
+/***** Private variables *****/
+
+#define GET_OPT_HOME_OS_DIR_NAME            "HOME"
+
 /******** Field sizes ********/
 
-#define GET_OPT_SIZE_VERB_BRIEF         2
+#define GET_OPT_SIZE_VERB_BRIEF             2
 
 /******** Error codes ********/
 
@@ -125,6 +129,7 @@ void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src);
 char* GetOptionsGenFormattedStr(char* string_to_format, int data_type);
 void PrintBoundaryData(char* option_summary_msg, int var_type, int blank_spaces_count, OPT_DATA_TYPE var_to_print);
 void ShowOptions(void);
+void GetOptionsExpandPath(char** src_short_path);
 
 /*************************************/
 
