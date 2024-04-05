@@ -49,7 +49,7 @@ SetOptionDefinition_Test_Data SetOptionDefinition_data =
     .opt_long =             {
                             "xxxxxxxxxx",
                             NULL,
-                            "xxxxxxxxxxxxxxxxxxxxxxxx",
+                            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                             "Option c",
                             "Option e",
                             "Option f",
@@ -181,6 +181,10 @@ int TestParseOptions(int argc, char** argv)
     int test_2, test_3;
     char* test_4 = calloc(20, 1);
     char test_5[20] = {};
+    char test_6[100] = {};
+    char test_7[100] = {};
+
+    SetSeverityLogMask(SVRTY_LOG_MASK_ALL);
 
     SetOptionDefinitionFloat(   'r'                                 ,
                                 "TestParse1"                        ,
@@ -225,6 +229,20 @@ int TestParseOptions(int argc, char** argv)
                                 "String NL" ,
                                 "zzzzz"     ,
                                 test_5     );
+    
+    SetOptionDefinitionStringNL('$'                         ,
+                                "~/Test_6_long"               ,
+                                "~/Test_6_detail"             ,
+                                "~/Test_6_opt_default_value"  ,
+                                test_6                      );
+
+    SetOptionDefinitionString(  '%'                     ,
+                                "~/Test_7_long"         ,
+                                "~/Test_7_detail"       ,
+                                "~/Test_7_aaa"          ,
+                                "~/Test_7_zzz"          ,
+                                "~/Test_7_ggg"          ,
+                                test_7                  );
 
     SetSeverityLogPrintTimeStatus(true);
 
@@ -235,6 +253,8 @@ int TestParseOptions(int argc, char** argv)
     LOG_INF("test_3 = %d", test_3);
     LOG_INF("test_4 = %s", test_4);
     LOG_INF("test_5 = %s", test_5);
+    LOG_INF("test_6 = %s", test_6);
+    LOG_INF("test_7 = %s", test_6);
 
     if(parse_options < 0)
     {
