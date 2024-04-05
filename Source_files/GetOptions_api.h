@@ -22,7 +22,7 @@ extern "C" {
 
 #define C_GET_OPTIONS_API __attribute__((visibility("default")))
 
-#define GET_OPT_SIZE_LONG_MAX           20
+#define GET_OPT_SIZE_LONG_MAX           50
 #define GET_OPT_SIZE_DETAIL_MAX         50
 
 /*****************************/
@@ -140,8 +140,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                 opt_dest_var        )                           \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_INT                                ,   \
                             GET_OPT_ARG_REQ_NO                              ,   \
                             (OPT_DATA_TYPE){.integer = 0}                   ,   \
@@ -169,8 +169,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                 opt_dest_var        )                               \
                                                                                     \
         SetOptionDefinition(    opt_char                                        ,   \
-                                opt_long                                        ,   \
-                                opt_detail                                      ,   \
+                                (char*)opt_long                                 ,   \
+                                (char*)opt_detail                               ,   \
                                 GET_OPT_TYPE_INT                                ,   \
                                 GET_OPT_ARG_REQ_REQUIRED                        ,   \
                                 (OPT_DATA_TYPE){.integer = opt_min_value}       ,   \
@@ -194,8 +194,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                     opt_dest_var            )                   \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_INT                                ,   \
                             GET_OPT_ARG_REQ_REQUIRED                        ,   \
                             (OPT_DATA_TYPE){.integer = INT_MIN}             ,   \
@@ -223,8 +223,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                 opt_dest_var                )                   \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_CHAR                               ,   \
                             GET_OPT_ARG_REQ_REQUIRED                        ,   \
                             (OPT_DATA_TYPE){.character = opt_min_value}     ,   \
@@ -249,8 +249,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                     opt_dest_var            )                   \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_CHAR                               ,   \
                             GET_OPT_ARG_REQ_REQUIRED                        ,   \
                             (OPT_DATA_TYPE){.character = CHAR_MIN}          ,   \
@@ -278,8 +278,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                     opt_dest_var                            )   \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_FLOAT                              ,   \
                             GET_OPT_ARG_REQ_REQUIRED                        ,   \
                             (OPT_DATA_TYPE){.floating = opt_min_value}      ,   \
@@ -303,8 +303,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                     opt_dest_var        )                       \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_FLOAT                              ,   \
                             GET_OPT_ARG_REQ_REQUIRED                        ,   \
                             (OPT_DATA_TYPE){.floating = FLT_MIN}            ,   \
@@ -332,8 +332,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                     opt_dest_var            )                   \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_DOUBLE                             ,   \
                             GET_OPT_ARG_REQ_REQUIRED                        ,   \
                             (OPT_DATA_TYPE){.doubling = opt_min_value}      ,   \
@@ -357,8 +357,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                     opt_dest_var            )                   \
                                                                                 \
         SetOptionDefinition(opt_char                                        ,   \
-                            opt_long                                        ,   \
-                            opt_detail                                      ,   \
+                            (char*)opt_long                                 ,   \
+                            (char*)opt_detail                               ,   \
                             GET_OPT_TYPE_DOUBLE                             ,   \
                             GET_OPT_ARG_REQ_REQUIRED                        ,   \
                             (OPT_DATA_TYPE){.doubling = DBL_MIN}            ,   \
@@ -386,8 +386,8 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
                                     opt_dest_var            )                       \
                                                                                     \
         SetOptionDefinition(opt_char                                            ,   \
-                            opt_long                                            ,   \
-                            opt_detail                                          ,   \
+                            (char*)opt_long                                     ,   \
+                            (char*)opt_detail                                   ,   \
                             GET_OPT_TYPE_CHAR_STRING                            ,   \
                             GET_OPT_ARG_REQ_REQUIRED                            ,   \
                             (OPT_DATA_TYPE){.char_string = opt_min_value}       ,   \
@@ -404,17 +404,17 @@ C_GET_OPTIONS_API int SetOptionDefinitionStringNoLimits(char opt_char           
 /// @param opt_dest_var Address to the variable meant to be set after parsing.
 /// @return < 0 if any error happened, 0 otherwise.
 //////////////////////////////////////////////////////////////////////////////
-#define SetOptionDefinitionStringNL(opt_char            ,           \
-                                    opt_long            ,           \
-                                    opt_detail          ,           \
-                                    opt_default_value   ,           \
-                                    opt_dest_var        )           \
-                                                                    \
-        SetOptionDefinitionStringNoLimits(  opt_char            ,   \
-                                            opt_long            ,   \
-                                            opt_detail          ,   \
-                                            opt_default_value   ,   \
-                                            opt_dest_var        )   
+#define SetOptionDefinitionStringNL(opt_char            ,                   \
+                                    opt_long            ,                   \
+                                    opt_detail          ,                   \
+                                    opt_default_value   ,                   \
+                                    opt_dest_var        )                   \
+                                                                            \
+        SetOptionDefinitionStringNoLimits(  opt_char                    ,   \
+                                            (char*)opt_long             ,   \
+                                            (char*)opt_detail           ,   \
+                                            (char*)opt_default_value    ,   \
+                                            opt_dest_var                )   
 
 ///////////////////////////////////////////////////////////////////////////
 /// @brief Set multiple option definition taking a struct array as input. 
