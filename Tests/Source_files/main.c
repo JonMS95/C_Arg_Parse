@@ -163,6 +163,7 @@ int Test_SetOptionDefinition()
     LOG_INF("********** SetOptionDefinition Test End **********");
 
     free(test_results);
+    test_results = NULL;
 
     return test_overall_result;
 }
