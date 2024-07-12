@@ -1,4 +1,4 @@
-# C_Arg_Parse: a server socket written in C language 🔀
+# C_Arg_Parse: a friendly tool to parse command-line input parameters 🔀
 A lightweight and user-friendly library designed to simplify the parsing of command line parameters in your applications.
 
 
