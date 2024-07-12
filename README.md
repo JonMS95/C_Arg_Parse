@@ -208,6 +208,7 @@ C_GET_OPTIONS_API int ParseOptions(int argc, char** argv);
 ```
 
 Which simply takes the argument count and argument strings array as input parameters (it requires them to be passed to the program's main function).
+If any error happens, it's associated error code will be returned (**< 0**).
 
 For reference, a proper API usage example has been provided on the [test source file](https://github.com/JonMS95/C_Arg_Parse/blob/main/Tests/Source_files/main.c).
 An example of CLI usage is provided in the [**Shell_files/test.sh**](https://github.com/JonMS95/C_Arg_Parse/tree/main/Shell_files) file.
