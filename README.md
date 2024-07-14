@@ -24,10 +24,10 @@ input parameters. However, they do not provide any way to determine whether the 
 * Setting associated character, long name, and details to the target option
 * Setting minimum, maximum and default values for the target option
 * Error handling
-* Parsing and displaying the variables on command-line
+* Parsing and displaying the variables on command line
 
 ## Prerequisites <a id="prerequisites"></a> 🧱
-By now, the application has only been tested in POSIX-compliant Linux distros. In these, many of the dependencies dependencies below may already come installed in the SO.
+By now, the application has only been tested in POSIX-compliant Linux distros. In these, many of the dependencies below may already come installed in the OS.
 In the following list, the minimum versions required (if any) by the library are listed.
 
 | Dependency                   | Purpose                                 | Minimum version |
@@ -72,7 +72,7 @@ cd /path/to/repos/C_Arg_Parse
 find . -type f -exec chmod u+x {} +
 ```
 
-3. For the library to be built (i.e., clean, download dependencies and compile), just type the following on your command:
+3. For the library to be built (i.e., clean, download dependencies and compile), just type the following:
 
 ```bash
 make
