@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.4] (Unreleased)
 ### Added
 * Path (tilde, ~) expansion
+* Documentation (license, contribution rules, readme and changelog)
 
 ### Changed
 * Option long names can be made up of up to 50 characters
