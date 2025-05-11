@@ -2,8 +2,8 @@
 <config>
     <Project_data
         version_major="1"
-        version_minor="4"
-        version_mode="RELEASE"
+        version_minor="5"
+        version_mode="DEBUG"
         URL="https://github.com/JonMS95/C_Arg_Parse"
         type="library"
         language="C"
@@ -11,60 +11,60 @@
     />
     <!-- Directory structure -->
     <Directories>
-        <Dynamic_libraries/>
+        <lib/>
         <API/>
-        <Dependency_files>
-            <Header_files/>
-            <Dynamic_libraries/>
-        </Dependency_files>
-        <Tests>
-            <Dependency_files>
-                <Dynamic_libraries/>
-                <Header_files/>
-            </Dependency_files>
-            <Executable_files/>
-        </Tests>
+        <deps>
+            <inc/>
+            <lib/>
+        </deps>
+        <test>
+            <deps>
+                <lib/>
+                <inc/>
+            </deps>
+            <exe/>
+        </test>
     </Directories>
     
     <!-- Common shell files location -->
     <Common_shell_files
         version_major="1"
-        version_minor="2"
-        version_mode="RELEASE"
+        version_minor="3"
+        version_mode="DEBUG"
         local_path="~/Desktop/scripts/C/C_Common_shell_files"
         URL="https://github.com/JonMS95/C_Common_shell_files"
     />
     
     <!-- Dependencies -->
     <!-- Paths to dependencies from other projects. -->
-    <Dependencies Dest="Dependency_files">
+    <deps Dest="deps">
         <C_Severity_Log
             version_major="1"
-            version_minor="3"
-            version_mode="RELEASE"
+            version_minor="4"
+            version_mode="DEBUG"
             local_path="~/Desktop/scripts/C/C_Severity_Log"
             URL="https://github.com/JonMS95/C_Severity_Log"
         />
-    </Dependencies>
+    </deps>
     
     <!-- Tests -->
     <!-- Paths to dependency files for the testing executable. -->
-    <Tests>
-        <Dependencies Dest="Tests/Dependency_files">
+    <test>
+        <deps Dest="test/deps">
             <C_Severity_Log
                 version_major="1"
-                version_minor="3"
-                version_mode="RELEASE"
+                version_minor="4"
+                version_mode="DEBUG"
                 local_path="~/Desktop/scripts/C/C_Severity_Log"
                 URL="https://github.com/JonMS95/C_Severity_Log"
             />
             <C_Arg_Parse
                 version_major="1"
-                version_minor="4"
-                version_mode="RELEASE"
+                version_minor="5"
+                version_mode="DEBUG"
                 local_path="~/Desktop/scripts/C/C_Arg_Parse"
                 URL="https://github.com/JonMS95/C_Arg_Parse"
             />
-        </Dependencies>
-    </Tests>
+        </deps>
+    </test>
 </config>
