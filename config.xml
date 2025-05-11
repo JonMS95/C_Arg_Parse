@@ -31,7 +31,7 @@
         version_major="1"
         version_minor="3"
         version_mode="RELEASE"
-        local_path="~/Desktop/scripts/C/C_Common_shell_files"
+        local_path="~/C_Common_shell_files"
         URL="https://github.com/JonMS95/C_Common_shell_files"
     />
     
@@ -39,10 +39,10 @@
     <!-- Paths to dependencies from other projects. -->
     <deps Dest="deps">
         <C_Severity_Log
-            version_major="1"
-            version_minor="4"
-            version_mode="DEBUG"
-            local_path="~/Desktop/scripts/C/C_Severity_Log"
+            version_major="2"
+            version_minor="0"
+            version_mode="RELEASE"
+            local_path="~/C_Severity_Log"
             URL="https://github.com/JonMS95/C_Severity_Log"
         />
     </deps>
@@ -52,17 +52,17 @@
     <test>
         <deps Dest="test/deps">
             <C_Severity_Log
-                version_major="1"
-                version_minor="4"
-                version_mode="DEBUG"
-                local_path="~/Desktop/scripts/C/C_Severity_Log"
+                version_major="2"
+                version_minor="0"
+                version_mode="RELEASE"
+                local_path="~/C_Severity_Log"
                 URL="https://github.com/JonMS95/C_Severity_Log"
             />
             <C_Arg_Parse
                 version_major="1"
                 version_minor="5"
                 version_mode="DEBUG"
-                local_path="~/Desktop/scripts/C/C_Arg_Parse"
+                local_path="."
                 URL="https://github.com/JonMS95/C_Arg_Parse"
             />
         </deps>
