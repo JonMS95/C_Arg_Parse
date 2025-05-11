@@ -106,10 +106,10 @@ SetOptionDefinition_Test_Case SetOptionDefinition_Test_Indexes[]=
 ///////////////////////////////////////////////////////////////
 int Test_SetOptionDefinition()
 {
-    LOG_INF("********** SetOptionDefinition Test Start **********");
+    SVRTY_LOG_INF("********** SetOptionDefinition Test Start **********");
 
     int number_of_tests = sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]);
-    LOG_INF("About to do %d tests.", number_of_tests);
+    SVRTY_LOG_INF("About to do %d tests.", number_of_tests);
 
     int* test_results = (int*)calloc(number_of_tests, sizeof(int));
 
@@ -117,7 +117,7 @@ int Test_SetOptionDefinition()
 
     for(int i = 0; i < sizeof(SetOptionDefinition_Test_Indexes) / sizeof(SetOptionDefinition_Test_Indexes[0]); i++)
     {
-        LOG_INF("\r\nTest %d.", i);
+        SVRTY_LOG_INF("\r\nTest %d.", i);
         int set_option_definition = SetOptionDefinition(SetOptionDefinition_data.opt_char[          SetOptionDefinition_Test_Indexes[i][0]] ,
                                                         SetOptionDefinition_data.opt_long[          SetOptionDefinition_Test_Indexes[i][1]] ,
                                                         SetOptionDefinition_data.opt_det[           SetOptionDefinition_Test_Indexes[i][2]] ,
@@ -130,7 +130,7 @@ int Test_SetOptionDefinition()
 
         if(set_option_definition != SetOptionDefinition_Test_Indexes[i][9])
         {
-            LOG_ERR("Test %d failed.\tExpected %d, got %d.", i, SetOptionDefinition_Test_Indexes[i][9], set_option_definition);
+            SVRTY_LOG_ERR("Test %d failed.\tExpected %d, got %d.", i, SetOptionDefinition_Test_Indexes[i][9], set_option_definition);
             test_results[i] = TEST_FLG_ERROR;
             if(test_overall_result != TEST_FLG_ERROR)
             {
@@ -139,28 +139,28 @@ int Test_SetOptionDefinition()
         }
     }
 
-    LOG_INF("********** SetOptionDefinition test results **********");
+    SVRTY_LOG_INF("********** SetOptionDefinition test results **********");
     for(int i = 0; i < number_of_tests; i++)
     {
         if(test_results[i] == TEST_FLG_ERROR)
         {
-            LOG_ERR(TEST_MSG_FAILED, i);
+            SVRTY_LOG_ERR(TEST_MSG_FAILED, i);
             continue;
         }
 
-        LOG_INF(TEST_MSG_SUCCEED, i);
+        SVRTY_LOG_INF(TEST_MSG_SUCCEED, i);
     }
 
     if(test_overall_result < 0)
     {
-        LOG_WNG("SetOptionDefinition test failed.");
+        SVRTY_LOG_WNG("SetOptionDefinition test failed.");
     }
     else
     {
-        LOG_INF("SetOptionDefinition test succeed!");
+        SVRTY_LOG_INF("SetOptionDefinition test succeed!");
     }
 
-    LOG_INF("********** SetOptionDefinition Test End **********");
+    SVRTY_LOG_INF("********** SetOptionDefinition Test End **********");
 
     free(test_results);
     test_results = NULL;
@@ -176,7 +176,7 @@ int Test_SetOptionDefinition()
 ///////////////////////////////////////////////////
 int TestParseOptions(int argc, char** argv)
 {
-    LOG_INF("********** ParseOptions Test Start **********");
+    SVRTY_LOG_INF("********** ParseOptions Test Start **********");
 
     float test_1;
     int test_2, test_3;
@@ -249,30 +249,32 @@ int TestParseOptions(int argc, char** argv)
 
     int parse_options = ParseOptions(argc, argv);
 
-    LOG_INF("test_1 = %2f", test_1);
-    LOG_INF("test_2 = %d", test_2);
-    LOG_INF("test_3 = %d", test_3);
-    LOG_INF("test_4 = %s", test_4);
-    LOG_INF("test_5 = %s", test_5);
-    LOG_INF("test_6 = %s", test_6);
-    LOG_INF("test_7 = %s", test_6);
+    SVRTY_LOG_INF("test_1 = %2f", test_1);
+    SVRTY_LOG_INF("test_2 = %d", test_2);
+    SVRTY_LOG_INF("test_3 = %d", test_3);
+    SVRTY_LOG_INF("test_4 = %s", test_4);
+    SVRTY_LOG_INF("test_5 = %s", test_5);
+    SVRTY_LOG_INF("test_6 = %s", test_6);
+    SVRTY_LOG_INF("test_7 = %s", test_6);
 
     if(parse_options < 0)
     {
-        LOG_WNG("ParseOptions test failed.");
+        SVRTY_LOG_WNG("ParseOptions test failed.");
     }
     else
     {
-        LOG_INF("ParseOptions test succeed!");
+        SVRTY_LOG_INF("ParseOptions test succeed!");
     }
 
-    LOG_INF("********** ParseOptions Test End **********");
+    SVRTY_LOG_INF("********** ParseOptions Test End **********");
 
     return (parse_options < 0) ? parse_options : GET_OPT_SUCCESS;
 }
 
 int main(int argc, char **argv)
 {
+    SeverityLogInit(1000, SVRTY_LOG_MASK_ALL, true, false, true);
+
     Test_SetOptionDefinition();
 
     TestParseOptions(argc, argv);
