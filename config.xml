@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <Project_data
-        version_major="1"
-        version_minor="5"
-        version_mode="DEBUG"
+        version_major="2"
+        version_minor="0"
+        version_mode="RELEASE"
         URL="https://github.com/JonMS95/C_Arg_Parse"
         type="library"
         language="C"
@@ -59,9 +59,9 @@
                 URL="https://github.com/JonMS95/C_Severity_Log"
             />
             <C_Arg_Parse
-                version_major="1"
-                version_minor="5"
-                version_mode="DEBUG"
+                version_major="2"
+                version_minor="0"
+                version_mode="RELEASE"
                 local_path="."
                 URL="https://github.com/JonMS95/C_Arg_Parse"
             />
