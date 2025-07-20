@@ -268,12 +268,15 @@ int TestParseOptions(int argc, char** argv)
 
     SVRTY_LOG_INF("********** ParseOptions Test End **********");
 
+    free(test_4);
+    test_4 = NULL;
+
     return (parse_options < 0) ? parse_options : GET_OPT_SUCCESS;
 }
 
 int main(int argc, char **argv)
 {
-    SeverityLogInit(1000, SVRTY_LOG_MASK_ALL, true, false, true);
+    SeverityLogInitWithMask(1000, 0xFF);
 
     Test_SetOptionDefinition();
 

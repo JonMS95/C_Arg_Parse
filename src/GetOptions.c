@@ -197,10 +197,6 @@ int CheckOptLowerOrEqual(int opt_var_type, OPT_DATA_TYPE min, OPT_DATA_TYPE max)
 
         case GET_OPT_TYPE_CHAR_STRING:
         {
-            // Expand boundaries if necessary (not likely to happen)
-            GetOptionsExpandPath(&min.char_string);
-            GetOptionsExpandPath(&max.char_string);
-
             char* minimum = min.char_string;
             char* maximum = max.char_string;
             
@@ -338,24 +334,6 @@ int FillPrivateOptStruct(   char            opt_char            ,
     return GET_OPT_SUCCESS;
 }
 
-/// @brief Expand path to server certificate and / or private key.
-/// @param src_short_str Path to be expanded.
-void GetOptionsExpandPath(char** src_short_str)
-{
-    if(src_short_str == NULL || *src_short_str == NULL)
-        return;
-    
-    if ((*src_short_str)[0] != '~')
-        return;
-
-    char* home_dir = getenv(GET_OPT_HOME_OS_DIR_NAME);
-    char* aux      = (char*)calloc(strlen(*src_short_str) + 1, 1);
-    strcpy(aux, *src_short_str + 1);
-    *src_short_str = (char*)calloc(strlen(home_dir) + strlen(aux), 1);
-    strcpy(*src_short_str, home_dir);
-    strcpy(*src_short_str + strlen(*src_short_str), aux);
-}
-
 //////////////////////////////////////////////////////////////////////////////
 /// @brief Gets and checks option definition.
 /// @param opt_char Option character.
@@ -405,9 +383,6 @@ int SetOptionDefinition(char            opt_char            ,
         return GET_OPT_ERR_NO_OPT_LONG;
     }
 
-    // Expand long option if necessary (not likely to happen)
-    GetOptionsExpandPath(&opt_long);
-
     // If option long string exists, then check if its length exceeds the allowed maximum.
     if(opt_long != NULL)
     {
@@ -436,9 +411,6 @@ int SetOptionDefinition(char            opt_char            ,
                 opt_char                    ,
                 opt_long                    );
     }
-
-    // Expand detail if necessary (not likely to happen)
-    GetOptionsExpandPath(&opt_detail);
 
     // If option detail exists, then check if its length exceeds the allowed maximum.
     if(opt_detail != NULL)
@@ -510,19 +482,6 @@ int SetOptionDefinition(char            opt_char            ,
         }
     }
 
-    // Even if no boundaries are established for the current parameter, if it is a string, then expand if it required.
-    if(opt_var_type == GET_OPT_TYPE_CHAR_STRING)
-    {
-        if(opt_min_value.char_string != NULL)
-            GetOptionsExpandPath(&(opt_min_value.char_string));
-
-        if(opt_max_value.char_string != NULL)
-            GetOptionsExpandPath(&(opt_max_value.char_string));
-
-        if(opt_default_value.char_string != NULL)
-            GetOptionsExpandPath(&(opt_default_value.char_string));
-    }
-
     // Check whether the pointer to the target output variable is null or not.
     if(opt_dest_var == NULL)
     {
@@ -590,7 +549,7 @@ int GetOptDefFromStruct(PUB_OPT_DEFINITION* pub_opt_def, int pub_opt_def_size)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 int GenerateShortOptStr(void)
 {
-    if(private_options        == NULL)
+    if(private_options == NULL)
     {
         SVRTY_LOG_DBG("FILE: %s\tFUNCTION: %s\tLINE: %d", __FILE__, __func__, __LINE__);
         return GET_OPT_ERR_NULL_PTR;
@@ -625,7 +584,7 @@ int GenerateShortOptStr(void)
         }
     }
 
-    short_options_string = (char*)calloc(strlen(aux_short_options), sizeof(char));
+    short_options_string = (char*)calloc(strlen(aux_short_options) + 1, sizeof(char));
     strcpy(short_options_string, aux_short_options);
 
     return GET_OPT_SUCCESS;
@@ -702,7 +661,6 @@ void CastParsedArgument(PRIV_OPT_DEFINITION* priv_opt_def, char* arg, OPT_DATA_T
 
         case GET_OPT_TYPE_CHAR_STRING:
         {
-            GetOptionsExpandPath(&arg);
             dest->char_string = arg;
         }
         break;
@@ -754,7 +712,6 @@ void AssignValue(PRIV_OPT_DEFINITION* priv_opt_def, OPT_DATA_TYPE src)
 
         case GET_OPT_TYPE_CHAR_STRING:
         {
-            GetOptionsExpandPath(&(src.char_string));
             strcpy((char*)(priv_opt_def->pub_opt.opt_dest_var), src.char_string);
         }
         break;
